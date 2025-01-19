@@ -102,7 +102,7 @@
         register_sidebar(
             array(
                     'name'  		=>__( 'Footer One', 'law-corporate' ),
-                    'id'    		=>	'footer-1', 'law-corporate',
+                    'id'    		=>	'footer-1',
                     'class'         =>  'footer-one footer-widget',
                     'description' 	=> __( ' The 1st footer item on the footer of the page ', 'law-corporate' ),
                     'before_sidebar'=> '<div id="%1$s" class="%2$s" >',
@@ -118,7 +118,7 @@
         register_sidebar( 
         array(
                     'name' 			=> __( 'Footer Two', 'law-corporate' ),
-                    'id' 			=> 'footer-2', 'law-corporate',
+                    'id' 			=> 'footer-2',
                     'class'         => 'footer-two footer-widget',
                     'description' 	=> __( 'The 2nd footer item on the footer of the page ', 'law-corporate' ),
                     'before_sidebar'=> '<div id="%1$s" class="%2$s" >',
@@ -134,7 +134,7 @@
         register_sidebar( 
             array(
                     'name' 			=>__( 'Footer Three', 'law-corporate'),
-                    'id' 			=> 'footer-3', 'law-corporate',
+                    'id' 			=> 'footer-3',
                     'class'         => 'footer-three footer-widget',
                     'description' 	=> __( ' The 3rd footer item on the footer of the page ', 'law-corporate' ),
                     'before_sidebar'=> '<div id="%1$s" class="%2$s" >',

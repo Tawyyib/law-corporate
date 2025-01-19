@@ -61,7 +61,7 @@
 
             } else {
 
-                echo '<p>' . __( 'Branding function not available.', 'law-corporate' ) . '</p>';
+                echo '<p>' . esc_html__( 'Branding function not available.', 'law-corporate' ) . '</p>';
 
             }
     
@@ -76,7 +76,7 @@
 
             ?>
             <p>
-                <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'law-corporate' ); ?></label>
+                <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html__( 'Title:', 'law-corporate' ); ?></label>
                 <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
             </p>
             <?php

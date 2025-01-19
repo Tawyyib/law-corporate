@@ -1328,10 +1328,10 @@ if (!function_exists('lc_breadcrumb')) {
         function lc_contact_address(){ 
 
             // Get site's address information
-            $address_line_1 = get_theme_mod('address_line_1','');
-            $address_line_2 = get_theme_mod('address_line_2');
-            $address_line_3 = get_theme_mod('address_line_3');
-            $address_line_4 = get_theme_mod('address_line_4');
+            $address_line_1 = get_theme_mod('address_line_1', 0);
+            $address_line_2 = get_theme_mod('address_line_2', 0);
+            $address_line_3 = get_theme_mod('address_line_3', 0);
+            $address_line_4 = get_theme_mod('address_line_4', 0);
                       
             // Out site's address 
             $address = '<div class="' . esc_attr('contact-address-in') .'">';
@@ -1376,7 +1376,7 @@ if (!function_exists('lc_breadcrumb')) {
         function lc_contact_phone(){ 
 
             // Get site's phone number
-            $phone_no = get_theme_mod('phone', '');
+            $phone_no = get_theme_mod('phone', 0);
 
             // Out the phone number
             if(!empty($phone_no)){
@@ -1444,11 +1444,11 @@ if (!function_exists('lc_breadcrumb')) {
         function lc_footer_branding() {
 
             // Get the brand image URLs
-            $brand_image_url = get_theme_mod('brand_image', '');
-            $brand_image_mobile_url = get_theme_mod('brand_image_mobile', '');
+            $brand_image_url = get_theme_mod('brand_image', 0);
+            $brand_image_mobile_url = get_theme_mod('brand_image_mobile', 0);
             
             // Get the statement of purpose
-            $statement_of_purpose = get_theme_mod('statement_of_purpose', '');
+            $statement_of_purpose = get_theme_mod('statement_of_purpose', 0);
             
             // Start outputting brand information
             $brand_label = '<div class="' . esc_attr('brand-info') . '">';
@@ -1470,7 +1470,7 @@ if (!function_exists('lc_breadcrumb')) {
             // Output statement of purpose
             if ( !empty( $statement_of_purpose ) ) {
                 $brand_label .= '<div class="' . esc_attr('brand-info-statement mt-3') . '">';
-                $brand_label .= '<p class="' . esc_attr('statement-of-purpose') . '">' . sprintf( esc_html__( 'Statement of Purpose: %s', "law-corporate" ), esc_html( $statement_of_purpose ) ) . '</p>';
+                $brand_label .= '<p class="' . esc_attr('statement-of-purpose') . '">' . sprintf( esc_html__( 'Statement of Purpose: %s', "law-corporate" ), esc_html($statement_of_purpose) ) . '</p>';
                 $brand_label .= '</div>';
             }
             
@@ -1529,7 +1529,7 @@ if (!function_exists('lc_breadcrumb')) {
         }
 
     }
-
+    
 
 /** FOOTER AND UNDERFOOTER */
       
