@@ -20,7 +20,7 @@ function lc_register_required_theme_plugins() {
     $plugins = array(
 
         array(
-            'name'                  => 'Law Corporate Custom Fields and Posts', // The plugin name
+            'name'                  => 'Law Corporate Custom UI', // The plugin name
             'slug'                  => 'law-corporate-custom-ui', // The plugin slug (typically the folder name)
             'source'                => get_template_directory() . '/plugins/law-corporate-custom-ui.zip', // The plugin source (path to .zip or folder)
             'required'              => true, // If false, the plugin is only 'recommended'
