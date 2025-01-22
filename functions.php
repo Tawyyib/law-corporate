@@ -383,7 +383,7 @@ if(!defined('ABSPATH')){
 	 * 6.0. LOAD THEME'S WIDGETS AND MORE														*
 	*********************************************************************************************/
 	//** 5.1. Activates Theme's widgets*/
-	if ( file_exists( get_template_directory() . '/lib/themeWidgets.php' ) ){
+	if ( ! file_exists( get_template_directory() . '/lib/themeWidgets.php' ) ){
 		
 		error_log( 'Theme\'s widget library is missing in theme: ' . get_template_directory()); 
 
