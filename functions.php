@@ -384,8 +384,15 @@ if(!defined('ABSPATH')){
 	*********************************************************************************************/
 	//** 5.1. Activates Theme's widgets*/
 	if ( file_exists( get_template_directory() . '/lib/themeWidgets.php' ) ){
+		
+		error_log( 'Theme\'s widget library is missing in theme: ' . get_template_directory()); 
+
+	}else{
+
 		require_once get_template_directory() . '/lib/themeWidgets.php';
+
 	}
+
 
 
 	/********************************************************************************************
@@ -394,7 +401,7 @@ if(!defined('ABSPATH')){
 	// ** 7.1. Activates Theme's plugin activation library */
 	if ( ! file_exists( get_template_directory() . '/inc/tgm-activation/class-tgm-plugin-activation.php' ) ) {
 
-		trigger_error( 'TGM Plugin Activation library is missing. Please ensure it is included in the theme.', E_USER_ERROR ); // Or use wp_die()
+		error_log( 'Critical Error: TGM Plugin Activation library is missing in theme: ' . get_template_directory()); // Or use wp_die()
 
 	} else {
 
@@ -405,7 +412,7 @@ if(!defined('ABSPATH')){
 	// 7.2. Activates Theme's custom plugin registrar (if needed) */
 	if ( ! file_exists( get_template_directory() . '/inc/tgm-activation/class-tgm-plugin-registrar.php' ) ) {
 
-		trigger_error( 'TGM Plugin Registrar library is missing. Please ensure it is included in the theme.', E_USER_ERROR ); // Or use wp_die()
+		error_log( 'Critical Error: TGM Plugin Registration library is missing in theme: ' . get_template_directory()); // Or use wp_die()
 
 	} else {
 
