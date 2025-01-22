@@ -1470,7 +1470,7 @@ if (!function_exists('lc_breadcrumb')) {
             // Output statement of purpose
             if ( !empty( $statement_of_purpose ) ) {
                 $brand_label .= '<div class="' . esc_attr('brand-info-statement mt-3') . '">';
-                $brand_label .= '<p class="' . esc_attr('statement-of-purpose') . '">' . sprintf( esc_html__( 'Statement of Purpose: %s', "law-corporate" ), esc_html($statement_of_purpose) ) . '</p>';
+                $brand_label .= '<p class="' . esc_attr('statement-of-purpose') . '">' . sprintf( esc_html__( '%s', "law-corporate" ), esc_html($statement_of_purpose) ) . '</p>';
                 $brand_label .= '</div>';
             }
             
