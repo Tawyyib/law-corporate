@@ -345,7 +345,7 @@ if (!function_exists('lc_breadcrumb')) {
                 $banner_image = get_template_directory_uri() . '/public/images/items-judges.webp'; // 
                     if (get_theme_mod('front_banner_image','') != '') 
                     {
-                        $banner_image = wp_get_attachment_url(get_theme_mod('front_banner_image',''));
+                        $banner_image = wp_get_attachment_image_src(get_theme_mod('front_banner_image',''));
                     }
                     							
 					// 3. Banner Title and Texts
