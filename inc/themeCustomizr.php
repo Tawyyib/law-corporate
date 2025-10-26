@@ -68,5 +68,4 @@ add_action( 'customize_register', function( $wp_customize ){ // Open Customize M
         include get_template_directory() . '/inc/custom/brandInfo.php';
       }
         
-  
 }); // Close Customize Manager to Contents    

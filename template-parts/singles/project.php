@@ -11,32 +11,42 @@
                                                                                 
                                     <article class="<?php echo esc_attr('project col-slg-7x col-smd-12'); ?>" >
 
-                                            <div class="<?php echo esc_attr(' project__body '); ?>" >
+                                        <div class="<?php echo esc_attr(' project__body '); ?>" >
 
-                                                <?php the_content(); 
+                                            <?php the_content(); 
                                                 
-                                                    wp_link_pages();
+                                                wp_link_pages();
                                                 
-                                                ?>
+                                            ?>
                                                 
-                                            </div>                                          
-                                                                
+                                        </div>                                          
+                                                                    
                                         <nav class="<?php echo esc_attr('navi d-flex justify-content-between mt-4'); ?>" >
                         
-                                            <div  class="<?php echo esc_attr('navi__box previ'); ?>" >
-                        
-                                                <?php previous_post_link('%link', '<span class="previ-arr" >&laquo;</span> <span class="previ-mobile" >Previous</span> <span class="previ-desktop" >%title</span>' ); ?>
-                        
-                                            </div>  
-                                
-                                            <div  class="<?php echo esc_attr('navi__box next'); ?>" >
-                        
-                                                <?php next_post_link('%link', '<span class="next-desktop">%title</span> <span class="next-mobile" >Next</span> <span class="next-arr" >&raquo;</span>' ); ?>
-                        
-                                            </div>
+                                            <?php
+                                                
+                                                // Reusable helper for navigation link markup
+                                                $prev_link = get_previous_post_link(
+                                                    '%link',
+                                                    '<span class="previ-arr">&laquo;</span> 
+                                                    <span class="previ-mobile">Previous</span> 
+                                                    <span class="previ-desktop">%title</span>'
+                                                );
+
+                                                $next_link = get_next_post_link(
+                                                    '%link',
+                                                    '<span class="next-desktop">%title</span> 
+                                                    <span class="next-mobile">Next</span> 
+                                                    <span class="next-arr">&raquo;</span>'
+                                                );
+
+                                            if ($prev_link || $next_link) : ?>
+                                                <div class="navi__box previ"><?php echo $prev_link; ?></div>
+                                                <div class="navi__box next"><?php echo $next_link; ?></div>
+                                            <?php endif; ?>
 
                                         </nav> 
-                                            
+                                    
                                     </article>
                                     
                                     <?php get_sidebar(); ?>

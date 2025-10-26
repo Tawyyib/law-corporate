@@ -18,9 +18,7 @@
  * */
 
  // Exit if accessed directly
-if(!defined('ABSPATH')){
-    exit;
-}
+if(!defined('ABSPATH')){ exit; }
 
 	/********************************************************************************************
 	 * 1.0. THEME CONSTANTS	                    												*
@@ -84,6 +82,8 @@ if(!defined('ABSPATH')){
 
 			wp_register_style('lc-stylesheet', get_template_directory_uri() . '/style.css', array(), $version, 'all');
 			wp_enqueue_style('lc-stylesheet');
+			wp_register_style('lc-app-style', get_template_directory_uri() . '/public/css/app.css', array(), $version, 'all');
+			wp_enqueue_style('lc-app-style'); 
 
  			wp_register_style('lc-fontawesome', get_template_directory_uri() . '/public/css/fonteawesome-6.5.2-all.min.css', array(), "6.5.2", 'all');
 			wp_enqueue_style('lc-fontawesome'); 
@@ -91,10 +91,10 @@ if(!defined('ABSPATH')){
  			wp_register_style('lc-custom-fonts',  '//fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 			wp_enqueue_style('lc-custom-fonts'); 
  
-			wp_register_style('lc-app-style', get_template_directory_uri() . '/public/css/app.css', array(), $version, 'all');
-			wp_enqueue_style('lc-app-style'); 
+			wp_register_style('lc-swiper-style', get_template_directory_uri() . '/public/css/swiper.bundle.css', array(), '11.2.10', 'all');
+			wp_enqueue_style('lc-swiper-style'); 
 
-   		}
+		}
 
 	}
 	add_action('wp_enqueue_scripts', 'lc_enqueue_theme_styles');
@@ -116,6 +116,9 @@ if(!defined('ABSPATH')){
 
 			wp_register_script('lc-counter-up-init', get_template_directory_uri() . '/public/js/counterUp.js', array('jquery', ), $version, true);
 			wp_enqueue_script('lc-counter-up-init');
+
+			wp_register_script('lc-swiper-js', get_template_directory_uri() . '/public/js/swiper.min.js', array('jquery', ), '11.2.10', true);
+			wp_enqueue_script('lc-swiper-js');
 
 		}
 
@@ -394,7 +397,6 @@ if(!defined('ABSPATH')){
 		require_once get_template_directory() . '/lib/themeWidgets.php';
 
 	}
-
 
 
 	/********************************************************************************************

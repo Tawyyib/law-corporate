@@ -39,7 +39,7 @@ if (!defined('ABSPATH')) {
 ?>
 
 <!-- Metrics / Project Counter -->
-    <section class="<?php echo esc_attr(' count-board position-relative py-0 bg-dar bg-image-center ') ?>" style="background-image: url('<?php echo esc_url($counter_fields['background_image']); ?>')">
+    <section class="<?php echo esc_attr(' count-board position-relative py-0 bg-image-center ') ?>" style="background-image: url('<?php echo esc_url($counter_fields['background_image']); ?>')">
         
         <!--- underlay-image -->        
         <div class="<?php echo esc_attr(' count-board__overlay py-7 '); ?>">
@@ -65,17 +65,17 @@ if (!defined('ABSPATH')) {
                             
                         ?>
                             <!-- Card One -->     
-                            <div class="<?php echo esc_attr(' counter-card bg-ligh'); ?>" >                        
-                                <div class="<?php echo esc_attr(' counter-card-inner'); ?>" >                        
-                                    <span class="<?php echo esc_attr('counter-card-over'); ?>" ><?php echo esc_html($counter_fields["element_{$i}_over"]); ?></span>                        
-                                    <span class="<?php echo esc_attr('counter-card-major counter'); ?>"  data-count="<?php echo esc_attr($counter_fields["element_{$i}_count"]); ?>" ><?php echo esc_html('0'); ?></span>                        
-                                    <span class="<?php echo esc_attr('counter-card-under'); ?>" ><?php echo esc_html($counter_fields["element_{$i}_under"]); ?></span>
+                            <div class="counter-card" >                        
+                                <div class="counter-card-inner" >                        
+                                    <span class="counter-card-over" ><?php echo esc_html($counter_fields["element_{$i}_over"]); ?></span>                        
+                                    <span class="counter-card-major counter"  data-count="<?php echo esc_attr($counter_fields["element_{$i}_count"]); ?>" ><?php echo esc_html('0'); ?></span>                        
+                                    <span class="counter-card-under" ><?php echo esc_html($counter_fields["element_{$i}_under"]); ?></span>
                                 </div>
                             </div>
 
-                            <div  class="<?php echo esc_attr('divider'); ?>" >
-                                <div  class="<?php echo esc_attr(' divider-vertical '); ?>" ></div>
-                                <div  class="<?php echo esc_attr(' divider-horizontal '); ?>" ></div>
+                            <div  class="divider" >
+                                <div  class="divider-vertical" ></div>
+                                <div  class="divider-horizontal" ></div>
                             </div>
 
                         <?php   }

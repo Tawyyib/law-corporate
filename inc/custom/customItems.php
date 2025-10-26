@@ -1,7 +1,12 @@
 <?php
 
 /**
- *  * @package Law Corporate  - Contact Data and Footer Branding Customizr
+ * 
+ *   * Contact Data and Footer Branding Customizr
+ * 
+ * @package WordPress
+ * @subpackage Law Corporate
+ * @since Law Corporate 1.0.0
  *
  * */
 

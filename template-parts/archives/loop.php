@@ -1,5 +1,26 @@
-        
-        <div id="post-<?php the_ID(); ?>" <?php post_class('content-outlay container-app py-7'); ?>" >
+                
+        <?php          
+            
+            // declare container class variable
+            $container_class = 'content-inner mb-2 ';
+
+            if ( is_post_type_archive('people') ) {
+
+                $container_class .= 'personnel-reel justify-content-evenly';
+                
+            } else if ( is_post_type_archive('projects') ) {
+
+                $container_class .= 'project-reel ';
+
+            } else {
+
+                $container_class .= 'post-reel justify-content-start';
+
+            }
+
+        ?>
+
+        <div id="post-<?php the_ID(); ?>" <?php post_class('content-outlay container-app py-7'); ?> >
             
             <?php if (is_home() || (is_archive() && !is_post_type_archive('people') && !is_post_type_archive('services')) && !is_tax() ) { ?>  
 
@@ -21,7 +42,7 @@
             
             <?php } ?>
                                                           
-            <div class="<?php echo esc_attr('content-inner row flex-row justify-content-between mb-2'); ?>" >
+            <div class="<?php echo esc_attr($container_class); ?>" >
                             
                 <?php if (have_posts()){
                     
@@ -30,10 +51,10 @@
                         the_post(); 
                         
                         if (is_post_type_archive('people')) {
-                                
-                                lc_person_card() ;
 
-                            wp_reset_postdata();
+                            $classes = ['person-card'];
+                                
+                            lc_person_card( $classes ) ;
 
                         }
                         
@@ -41,19 +62,16 @@
 
                             lc_projects_card() ;
 
-                            wp_reset_postdata();
-
                         } elseif (is_post_type_archive('services') || is_tax()) {
 
                             lc_service_card() ;
 
-                            wp_reset_postdata();
+                        } else if (is_home() || is_category( ) || is_post_type_archive('post')){
 
-                        }else if (is_home() || is_category( ) || is_post_type_archive('post')){
+                            $m_class = 'post-card';
+                            $post_card_classes = ['col-sm-12'];
 
-                            lc_post_card();
-
-                            wp_reset_postdata();
+                            lc_post_card( $m_class, $post_card_classes, true, false );
                                                                                     
                         }
 
@@ -61,7 +79,7 @@
                                 
                     } 
                 
-                }else{ 
+                } else { 
                         
                     echo '<p class="'. esc_attr('no-content ') .'"  >'. esc_html__('Content(s) not created yet, please check back later.', 'law-corporate') . '</p>';                        
 

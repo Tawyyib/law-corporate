@@ -1,17 +1,21 @@
 <?php
 
 /**
- *  * @package Law Corporate  - Header Banner
+ * 
+ *   * Header Banner
+ * 
+ * @package WordPress
+ * @subpackage Law Corporate
+ * @since Law Corporate 1.0.0
  *
  * */
 
  // Exit if accessed directly
-if(!defined('ABSPATH')){
-    exit;
-}
-  /** 1. */
+if(!defined('ABSPATH')){ exit; }
 
-	  // B. Add section for Slide one customization
+  /** 1. **/
+
+	  // A. Add section for Slide one customization
 	  $wp_customize->add_section( 'front_banner' , // Slide section one
 		array(
 				'title' => __( 'FrontPage Banner Settings', 'law-corporate' ),
@@ -22,7 +26,7 @@ if(!defined('ABSPATH')){
 			) 
 	  );
 		
-	  // B.1.a. Add setting for Slide one toggler - activate/deactivate Slide  
+	  // A.1.a. Add setting for Slide one toggler - activate/deactivate Slide  
 	  $wp_customize->add_setting( 'front_banner_toggler', // 
 		array(
 				'type' => 'theme_mod', // or 'option'
@@ -33,7 +37,7 @@ if(!defined('ABSPATH')){
 			)    
 	  );       //add setting  
 	  
-	  // B.1.b. Add control for Slide one toggler - activate/deactivate Slide    
+	  // A.1.b. Add control for Slide one toggler - activate/deactivate Slide    
 	  $wp_customize->add_control( 'front_banner_toggler' , // 
 		array(
 				'type' => 'checkbox', // or 'option'
@@ -45,7 +49,7 @@ if(!defined('ABSPATH')){
 			)
 	  );       //add control
 
-	  // B.2.a. Add setting for Banner background image customization
+	  // A.2.a. Add setting for Banner background image customization
 	  $wp_customize->add_setting( 'front_banner_image', // define setting for Slide one
 		array( 
 			  'type' => 'theme_mod', // or 'option'
@@ -58,7 +62,7 @@ if(!defined('ABSPATH')){
 			) 
 	  );
 	  
-	  // B.2.b. Add control for Banner background image customization
+	  // A.2.b. Add control for Banner background image customization
 	  $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'front_banner_image', 
 		array(
 			  'label'             =>  __( 'Banner Image', 'law-corporate' ),
@@ -91,7 +95,7 @@ if(!defined('ABSPATH')){
 		  ) 
 		);
 
-	  // B.3.a. Add setting for banner Video customization
+	  // A.3.a. Add setting for banner Video customization
 	  $wp_customize->add_setting( 'front_banner_video', // define setting for Slide one
 		array( 
 			  'type' => 'theme_mod', // or 'option'
@@ -104,7 +108,7 @@ if(!defined('ABSPATH')){
 			) 
 	  );
 	  
-	  // B.3.b. Add control for banner video customization
+	  // A.3.b. Add control for banner video customization
 	  $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'front_banner_video', 
 		array(
 			  'label'             =>  __( 'Banner Video Background', 'law-corporate' ),
@@ -137,7 +141,7 @@ if(!defined('ABSPATH')){
 		  ) 
 		);
 
-	  // B.7.a. Add setting for banner caption title cstomization
+	  // A.4.a. Add setting for banner caption title cstomization
 	  $wp_customize->add_setting( 'front_banner_title', // define setting for Slide one
 		  array( 
 				  'type' => 'theme_mod', // or 'option'
@@ -150,7 +154,7 @@ if(!defined('ABSPATH')){
 			  ) 
 	  );
 
-	  // B.7.b. Add control for Slide one caption title customization
+	  // A.4.b. Add control for Slide one caption title customization
 	  $wp_customize->add_control( 'front_banner_title', // define a control item for Slide one 
 		  array(
 				  'type' => 'text',
@@ -168,7 +172,7 @@ if(!defined('ABSPATH')){
 			  ) 
 	  );
 
-	  // B.8.a. Add setting for Slide one caption details customization
+	  // A.5.a. Add setting for Slide one caption details customization
 	  $wp_customize->add_setting( 'front_banner_details', // define setting for Slide
 		  array( 
 				  'type' => 'theme_mod', // or 'option'
@@ -181,7 +185,7 @@ if(!defined('ABSPATH')){
 			  ) 
 	  );
 
-	  // B.8.b. Add control for Slide one caption details customization
+	  // A.5.b. Add control for Slide one caption details customization
 	  $wp_customize->add_control( 'front_banner_details', // define a control item for Slide one 
 		  array(
 				'type' => 'textarea',
@@ -199,7 +203,7 @@ if(!defined('ABSPATH')){
 			) 
 	  );
 
-	  // B.9.a. Add setting for Slide one CTA button one URL customization
+	  // A.6.a. Add setting for Slide one CTA button one URL customization
 	  $wp_customize->add_setting( 'front_banner_url', // define subtitle setting for Slide
 		  array( 
 				'type' => 'theme_mod', // or 'option'
@@ -212,7 +216,7 @@ if(!defined('ABSPATH')){
 			  ) 
 	  );
 
-	  // B.9.b. Add control for Slide one CTA button one URL/shortcode customization
+	  // A.6.b. Add control for Slide one CTA button one URL/shortcode customization
 	  $wp_customize->add_control( 'front_banner_url', // define subtitle control item for Slide
 		  array(
 				'type' => 'text',
@@ -230,7 +234,7 @@ if(!defined('ABSPATH')){
 			) 
 	  );
 
-	  // B.10.a. Add setting for Slide one CTA button one customization
+	  // A.7.a. Add setting for Slide one CTA button one customization
 	  $wp_customize->add_setting( 'front_banner_label', // define subtitle setting for Slide
 		  array( 
 				'type' => 'theme_mod', // or 'option'
@@ -243,7 +247,7 @@ if(!defined('ABSPATH')){
 			  ) 
 	  );
 
-	  // B.10.b. Add control for Slide one CTA button one customization
+	  // A.7.b. Add control for Slide one CTA button one customization
 	  $wp_customize->add_control( 'front_banner_label', // define subtitle control item for Slide
 		  array(
 				'type' => 'text',
