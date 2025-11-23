@@ -148,34 +148,10 @@ if(!defined('ABSPATH')){ exit; }
 			
 		$version = get_theme_version();
 		
-		wp_enqueue_script('suc-toggle-switch', get_template_directory_uri() . '/public/js/admin-scripts.js', array('jquery'), $version, true);
-		
 		wp_enqueue_media(); // Loads the default WordPress media uploader scripts
-			
-		// Enqueue CPT scriipts
-		if ($hook == 'post-new.php' || $hook == 'post.php') {
+		
+		wp_enqueue_script('suc-toggle-switch', get_template_directory_uri() . '/public/js/admin-scripts.js', array('jquery'), $version, true);
 
-			if ($post && $template_names = array('front-page.php' => 'Front Page', ) || get_post_meta($post->ID, '_wp_page_template', true) == 'page-about.php') {
-
-				wp_enqueue_media();
-				wp_enqueue_script('meta-boxes', get_template_directory_uri() . '/public/js/value-meta-script.js', array('jquery'), $version, true);
-
-			}
-
-		}
-
-		// Enqueue CPT scriipts
-		$screen = get_current_screen();
-		if (isset($screen->taxonomy) && $screen->taxonomy === 'technical-areas') {
-
-			wp_enqueue_media();
-			wp_enqueue_script('taxonomy-image-upload', get_template_directory_uri() . '/public/js/svg-tax-upload.js', array('jquery'), null, true);
-
-		}
-
-		//wp_enqueue_script('suc-toggle-switch', plugins_url('/assets/js/adminst.js', __FILE__), array('jquery'), '1.0', true);
-
-		//wp_enqueue_script('suc-media-init', plugins_url('/assets/js/wp-uploader.js', __FILE__), array('jquery'), '1.0', true);
 			
 	}
 	add_action('admin_enqueue_scripts', 'lc_enqueue_admin_jsextra');

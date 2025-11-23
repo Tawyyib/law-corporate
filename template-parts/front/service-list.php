@@ -3,7 +3,7 @@
     // Ensure this code runs within the WordPress environment
     if (!defined('ABSPATH')) { exit; }        
         
-        $service_section_title = esc_html('Our Expertise');
+        $service_section_title = esc_html('Our Competencies');
         if (get_post_meta($post->ID, 'service_section_title', true) != '') {
             $service_section_title = get_post_meta($post->ID, 'service_section_title', true);
         }
@@ -75,7 +75,7 @@
 
                     <div class="front-tax__listings accordion" id="taxAccordion">
                         
-                        <?php  lc_tax_cards ('technical-areas', 'general' ); ?>
+                        <?php  lc_tax_cards ('competency', 'general' ); ?>
 
                     </div>                    
 

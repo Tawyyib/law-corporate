@@ -1520,7 +1520,7 @@ if(!function_exists('lc_scroll_button')){
 
             echo '<section  class="' . esc_attr('project__metadata col-smd-12 bg-light') . '" >';
 
-                $technical_areas = wp_get_post_terms( get_the_ID(), 'technical-areas', array("fields" => "names"));
+                $competency = wp_get_post_terms( get_the_ID(), 'technical-areas', array("fields" => "names"));
 
                 // Fetch Project
                 $project_owner = get_post_meta(get_the_ID(), 'project_owner', true);
@@ -1569,7 +1569,7 @@ if(!function_exists('lc_scroll_button')){
 
                     <div class="<?php echo esc_attr('project__metadata_item'); ?>">
                         <span class="<?php echo esc_attr('project__metadata_item-title'); ?>"><?php echo esc_html('Technical Summary'); ?></span>
-                        <span class="<?php echo esc_attr('project__metadata_item-value'); ?>"><?php echo esc_html(implode(', ', $technical_areas)); ?></span>
+                        <span class="<?php echo esc_attr('project__metadata_item-value'); ?>"><?php echo esc_html(implode(', ', $competency)); ?></span>
                     </div>  
 
                     <div class="<?php echo esc_attr('project__metadata_item'); ?>">

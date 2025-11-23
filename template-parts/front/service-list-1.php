@@ -3,7 +3,7 @@
     // Ensure this code runs within the WordPress environment
     if (!defined('ABSPATH')) { exit; }      
 
-            $service_section_title = esc_html('Services and Expertise');
+            $service_section_title = esc_html('Competencies and Expertise');
             if (get_post_meta($post->ID, 'service_section_title', true) != '') {
                 $service_section_title = get_post_meta($post->ID, 'service_section_title', true);
             }
@@ -36,7 +36,7 @@
 
                     <!-- service-tax-card-one -->
 
-                    <?php  lc_expert_card('technical-areas', 'general' ); ?>
+                    <?php  lc_expert_card('competency', 'general' ); ?>
 
                 </div>
 
