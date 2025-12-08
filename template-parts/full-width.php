@@ -17,9 +17,9 @@
                                                                 
                                     }  
                 
-                                    }
+                                }
                                                                                             
-                                    get_template_part('template-parts/content/values-new');
+                                    get_template_part('template-parts/content/sole-banner');
                                 
                                 ?>                                
                             
