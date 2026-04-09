@@ -179,7 +179,7 @@ $wp_customize->add_setting( 'address_line_1', //
                 'capability' => 'edit_theme_options',
                 'default' => '',
                 'transport' => 'refresh',
-                'sanitize_callback' => 'absint'
+                'sanitize_callback' => 'lc_sanitize_phone'
             )    
         );       //add setting  
 

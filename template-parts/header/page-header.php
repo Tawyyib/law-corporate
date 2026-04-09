@@ -22,15 +22,21 @@
 										
 								<h1><?php if ($post_type_object){ echo $post_type_object->labels->name; }	?></h1> 
 																		
-							<?php } elseif(is_singular('post')){  ?>
+							<?php } elseif(is_singular('post')){  
+								
+								$post_category = wp_get_post_terms( get_the_ID(), 'category', array("fields" => "names"));
+								
+								?>
 
-								<div class="<?php echo esc_attr('post-label d-flex flex-column justify-content-between bg-dar '); ?>">
+								<div class="post-meta d-flex flex-column">
 											
-									<span class="<?php echo esc_attr(' post-label__time-stamp d-flex mb-2 '); ?>" ><?php the_category(); ?>&nbsp;&nbsp;&diams;&nbsp;&nbsp;<?php the_time('F d, Y'); ?> </span>
+									<?php the_category(); ?>
 													
-									<h1 class="<?php echo esc_attr(' post-label__title mb-2 '); ?>" ><?php esc_html(single_post_title()); ?></h1> 
+									<h1 class="post-meta__title" ><?php esc_html(single_post_title()); ?></h1> 
 
-									<span class="<?php echo esc_attr('post-label__author d-flex mb-0 '); ?>" ><?php echo esc_html('By'); ?>&nbsp;&nbsp;<?php if (function_exists('lc_post_author_data')) {lc_post_author_data();} ?>&nbsp;<?php // the_time('F d, Y'); ?> </span>
+									<span class="post-meta__author d-flex" >By&nbsp;<?php if (function_exists('lc_post_authors')) {lc_post_authors();} ?></span>
+
+									<span class="post-meta_time-stamp d-flex" ><?php the_time('F d, Y'); ?> &nbsp;&nbsp;|&nbsp;&nbsp; <?php echo esc_html(get_avg_read_time()); ?> Read</span>
 													
 								</div>
 								
@@ -38,9 +44,7 @@
 										
 								<div class="<?php echo esc_attr('project_label d-flex justify-content-between'); ?>">
 													
-									<h1 class="<?php echo esc_attr(' project_label_title mb-4 col-sxxl-8 col-sxl-7x col-slg-6  col-md-5x col-sm-12'); ?>" ><?php esc_html(single_post_title()); ?></h1> 																			
-
-									<span class="<?php echo esc_attr(' project_label_meta'); ?>" ><?php echo lc_project_metadata(); ?></span>
+									<h1 class="<?php echo esc_attr(' project_label_title col-lg-11 col-sm-12'); ?>" ><?php esc_html(single_post_title()); ?></h1>
 													
 								</div>
 

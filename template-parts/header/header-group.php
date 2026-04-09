@@ -32,13 +32,13 @@
                     
             <?php if ( !is_front_page() && !is_page('Contact') && !is_page('Contact Us') && !is_home() ) : ?>   
 
-            <div class="<?php echo esc_attr('breadcrumb bg-light'); ?>" ><!-- breadcrumb -->
+            <div class="<?php echo esc_attr('sitecrumb bg-light'); ?>" ><!-- breadcrumb -->
 
-				<div class="<?php echo esc_attr('breadcrumb__inner container-app d-flex align-items-center justify-content-between'); ?>">
+				<div class="<?php echo esc_attr('sitecrumb__inner container-app d-flex align-items-center justify-content-between'); ?>">
 
 					<?php if (function_exists('lc_breadcrumb')) { lc_breadcrumb(); } ?>
 					
-					<?php if (function_exists('lc_back_button')) { lc_back_button(); } ?>
+					<?php // if (function_exists('lc_back_button')) { lc_back_button(); } ?>
 										
 				</div>
 

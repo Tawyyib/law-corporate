@@ -19,6 +19,7 @@
 
         // Handle background image (ID or URL)
         $bg_meta = get_post_meta($post_id, 'background_image', true);
+        
         $background_image = is_numeric($bg_meta) 
             ? wp_get_attachment_image_url($bg_meta, 'large') 
             : $bg_meta;
@@ -65,7 +66,7 @@
 
                         <?php foreach ($cards_data as $card) : ?>
                                 
-                            <!-- value-card-<?php echo $counter; ?>-->
+                            <!-- value-card-<?php echo $card['index']; ?>-->
                                 <div class="value-card value-card-<?php echo $card['index']; ?>">
                                     
                                     <div class="value-card__header mb-2">

@@ -1,4 +1,4 @@
-<aside  class="<?php echo esc_attr('page-side-bar col-sm-12 col-slg-4 bg-image-center'); ?>" >
+<aside  class="page-aside d-flex" >
     
     <?php if (is_singular('projects')) { 
 
@@ -9,10 +9,10 @@
     } ?>
 
     <?php if (is_singular('services')) {
-        	
-        lc_services_rel();
                 
         lc_projects_rel();
+
+        lc_posts_rel();
                     
     }?> 
 
