@@ -21,6 +21,40 @@ if (! function_exists('lc_breadcrumb')) {
         return $terms[0];
         
     }
+    
+    //Post_type Object Taxonomy Helper
+    function lc_get_post_taxonomy($post_type, $args = []) {
+
+        $defaults = [
+            'context' => null,
+            'hierarchical_only' => true,
+        ];
+
+        $args = wp_parse_args($args, $defaults);
+        
+        $taxonomies = get_object_taxonomies($post_type, 'objects');
+
+        if (empty($taxonomies)) return null;
+
+        foreach ($taxonomies as $taxonomy) {
+
+            // 🔹 Skip non-hierarchical if required (removes tags)
+            if ($args['hierarchical_only'] && ! $taxonomy->hierarchical) {
+                continue;
+            }
+
+            // 🔹 Ensure taxonomy is actually registered
+            if (! taxonomy_exists( $taxonomy->name )) {
+                continue;
+            }
+
+            return $taxonomy; // return first valid match
+            
+        }
+
+        return null;
+
+    }
 
     //term ancestors helper
     function lc_get_term_ancestors($term, $taxonomy, $delimiter) {
@@ -134,23 +168,12 @@ if (! function_exists('lc_breadcrumb')) {
                     return;
                 }
                                 
-                $tax_obj = get_taxonomy( $term->taxonomy );
+                $taxonomy = get_taxonomy( $term->taxonomy );
 
-                if ( $tax_obj && ! empty( $tax_obj->object_type ) ) {
+                //Taxonomy Label (Middle Crumb)
+                if ( $taxonomy ) {
 
-                    $post_type = get_post_type();
-
-                    if ( in_array( $post_type, $tax_obj->object_type, true ) ) {
-
-                        $post_type_object = get_post_type_object( $post_type );
-
-                    }
-
-                    if ( $post_type_object ) {
-
-                        echo $delimiter . '<span class="no-link-crumb">' . esc_html( $post_type_object->labels->name ) . '</span>';
-
-                    }
+                    echo $delimiter . '<span class="no-link-crumb">' . esc_html( $taxonomy->labels->singular_name ) . '</span>';
 
                 }
 
@@ -170,49 +193,49 @@ if (! function_exists('lc_breadcrumb')) {
 
                 $post_type = get_post_type();
 
-                    // SERVICES
-                    if ($post_type === 'services') {
+                // SERVICES
+                if ( in_array( $post_type, [ 'services' ], true ) ) {
 
-                        $post_type_object = get_post_type_object($post_type);
-
-                        if ( $post_type_object ) {
+                    // Main Taxonomy
+                    $taxonomy = lc_get_post_taxonomy($post_type);
+                    if ( $taxonomy ) {
                         
-                            // CPT LABEL (NOT CLICKABLE — YOUR DESIGN)
-                            echo $delimiter . '<span class="no-link-crumb">' . esc_html( $post_type_object->labels->name ) . '</span>';
+                        // CPT LABEL (NOT CLICKABLE — YOUR DESIGN)
+                        echo $delimiter . '<span class="no-link-crumb">' . esc_html( $taxonomy->labels->singular_name ) . '</span>';
 
-                        }
+                    }
 
-                        $taxonomies = get_object_taxonomies($post_type, 'objects');
+                    // Sub Taxonomy
+                    $taxonomies = get_object_taxonomies($post_type, 'objects');
+                    foreach ($taxonomies as $taxonomy) {
 
-                        foreach ($taxonomies as $taxonomy) {
+                        // check if the taxonomy is not a tag
+                        if ($taxonomy->hierarchical === false) continue;
 
-                            // check if the taxonomy is not a tag
-                            if ($taxonomy->hierarchical === false) continue;
-
-                            $terms = get_the_terms($post_id, $taxonomy->name);
+                        $terms = get_the_terms($post_id, $taxonomy->name);
                                 
-                            if ($terms && !is_wp_error($terms)) {
+                        if ($terms && !is_wp_error($terms)) {
 
-                                $term = lc_get_deepest_term($terms, $taxonomy );
+                            $term = lc_get_deepest_term($terms, $taxonomy );
 
-                                if ( $term->term_id ) {
+                            if ( $term->term_id ) {
 
-                                    //Ancestors - 3
-                                    lc_get_term_ancestors( $term, $term->taxonomy, $delimiter ); 
+                                //Ancestors - 3
+                                lc_get_term_ancestors( $term, $term->taxonomy, $delimiter ); 
                                         
-                                }
-
-                                echo $delimiter .  '<a href="' . esc_url(get_term_link($term) ) . '">' . esc_html($term->name) . '</a>';
-                                break; // Stop after the first taxonomy with terms
-
                             }
 
+                            echo $delimiter .  '<a href="' . esc_url(get_term_link($term) ) . '">' . esc_html($term->name) . '</a>';
+                            break; // Stop after the first taxonomy with terms
+
                         }
+
+                    }
                     
-                    } 
+                } 
                     
-                // PROJECTS + PEOPLE
-                elseif ( in_array( $post_type, [ 'projects', 'people' ], true ) ) {
+                // PROJECTS 
+                elseif ( in_array( $post_type, [ 'projects' ], true ) ) {
 
                     $post_type_obj = get_post_type_object($post_type);
 
@@ -223,37 +246,50 @@ if (! function_exists('lc_breadcrumb')) {
                     }
                    
                 }
-                     
-                    // BLOG POSTS
-                    else {
+                                     
+                //  PEOPLE
+                elseif ( in_array( $post_type, [ 'people' ], true ) ) {
 
-                        $blog_page_id = get_option('page_for_posts');
+                    $post_type_obj = get_post_type_object($post_type);
 
-                        if ( $blog_page_id ) {
+                    if ( $post_type_obj ) {
 
-                            echo $delimiter . '<a href="' . esc_url( get_permalink($blog_page_id) ) . '">' . esc_html( get_the_title($blog_page_id) ) . '</a>';
-                            
-                        }
-
-                        $categories = get_the_category();
-
-                        if ( $categories ) {
-
-                            $category = lc_get_deepest_term($categories, 'category');
-
-                            if ( $category ) {
-
-                                // Ancestors - 4
-                                lc_get_term_ancestors( $category, 'category', $delimiter );
-
-                            }
-
-                            // Current category
-                            echo $delimiter . '<a href="' . esc_url( get_term_link( $category ) ) . '">' . esc_html( $category->name ) . '</a>';
-
-                        }
+                        echo $delimiter . '<a href="' . esc_url( get_post_type_archive_link($post_type) ) . '">' . esc_html( $post_type_obj->labels->singular_name ) . '</a>';
 
                     }
+                   
+                }
+                     
+                // BLOG POSTS
+                else {
+
+                    $blog_page_id = get_option('page_for_posts');
+
+                    if ( $blog_page_id ) {
+
+                        echo $delimiter . '<a href="' . esc_url( get_permalink($blog_page_id) ) . '">' . esc_html( get_the_title($blog_page_id) ) . '</a>';
+                            
+                    }
+
+                    $categories = get_the_category();
+
+                    if ( $categories ) {
+
+                        $category = lc_get_deepest_term($categories, 'category');
+
+                        if ( $category ) {
+
+                            // Ancestors - 4
+                            lc_get_term_ancestors( $category, 'category', $delimiter );
+
+                        }
+
+                        // Current category
+                        echo $delimiter . '<a href="' . esc_url( get_term_link( $category ) ) . '">' . esc_html( $category->name ) . '</a>';
+
+                    }
+
+                }
 
                 // Show current post title
                 if (( $showCurrent )){
@@ -270,9 +306,19 @@ if (! function_exists('lc_breadcrumb')) {
                 $post_type = get_queried_object();
 
                 if ( $post_type && isset($post_type->labels->name) ) {
-                
-                    echo $delimiter . $before . esc_html( $post_type->labels->name ) . $after;
-                
+
+                    if ( $post_type->name === 'people' ) {
+
+                        echo $delimiter . $before . esc_html( $post_type->labels->singular_name ) . $after;
+
+                    }
+
+                    else {
+                        
+                        echo $delimiter . $before . esc_html( $post_type->labels->name ) . $after;
+
+                    }
+                    
                 }
 
             }

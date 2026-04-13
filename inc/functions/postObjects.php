@@ -107,7 +107,7 @@
 
                                 <span  class="time"  ></span>
 
-                                <span  class="time"  ><?php echo esc_html(get_avg_read_time()); ?> Read</span>
+                                <span  class="time"  ><?php echo esc_html(get_avg_read_time()); ?><span class="read-text"> Read</span></span>
 
                             </div>
 
@@ -275,7 +275,7 @@
 
                                 <span  class="time"  ></span>
 
-                                <span  class="time"  ><?php echo esc_html(get_avg_read_time()); ?> Read</span>
+                                <span  class="time"  ><?php echo esc_html(get_avg_read_time()); ?><span class="read-text"> Read</span></span>
 
                             </div>
 
@@ -548,7 +548,8 @@
                 $final_minutes = ceil($total_seconds / 60);
 
                 // Return the formatted string
-                return $final_minutes . ' min';
+                return $final_minutes . ($final_minutes <= 1 ?  ' minute' : ' minutes' );
+                
             }
 
     }

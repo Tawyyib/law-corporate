@@ -16,9 +16,9 @@
 
 	    <?php wp_body_open() ?>
         
-        <div id="<?php echo esc_attr('app'); ?>" class="<?php echo esc_attr('app'); ?>"><!-- open-site-content-wrap -->
+        <div id="app" class="'app"><!-- open-site-content-wrap -->
 
-            <header class="<?php echo esc_attr('header fixed-top'); ?>" ><!-- site-header -->
+            <header class="header fixed-top" ><!-- site-header -->
 
 				<?php get_template_part( 'template-parts/header/site-branding' ); ?><!-- site-bar -->
 
@@ -30,16 +30,16 @@
 
 			</div>
                     
-            <?php if ( !is_front_page() && !is_page('Contact') && !is_page('Contact Us') && !is_home() ) : ?>   
+            <?php if ( !is_front_page() && !is_page('Contact') && !is_page('Contact Us') ) : ?>   
 
-            <div class="<?php echo esc_attr('sitecrumb bg-light'); ?>" ><!-- breadcrumb -->
+            <div class="sitecrumb bg-light" ><!-- breadcrumb -->
 
-				<div class="<?php echo esc_attr('sitecrumb__inner container-app d-flex align-items-center justify-content-between'); ?>">
+				<div class="sitecrumb__inner container-app d-flex align-items-center justify-content-between">
 
 					<?php if (function_exists('lc_breadcrumb')) { lc_breadcrumb(); } ?>
 					
-					<?php // if (function_exists('lc_back_button')) { lc_back_button(); } ?>
-										
+					<?php if (function_exists('lc_back_button')) { lc_back_button(); } ?>
+															
 				</div>
 
             </div>          
@@ -48,8 +48,8 @@
 
             <?php if (! is_front_page()) : ?>   
 			
-			<main id=" <?php echo esc_attr('main'); ?>" class="<?php echo esc_attr(' main '); ?> " ><!-- main content section -->
+			<main id="main" class="main" ><!-- main content section -->
 				
-				<div class=" <?php echo esc_attr('main-inner '); ?><?php if(! is_page('Contact')){ echo esc_attr('py-0 my-0 '); } ?> " >
+				<div class="main-inner <?php if(! is_page('Contact')){ echo esc_attr('py-0 my-0 '); } ?>" >
 				     					
 			<?php endif; ?>

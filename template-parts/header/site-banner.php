@@ -1,86 +1,119 @@
-<section 
-
+    <!--    Page Banners    -->
+        
     <?php
-
+    
         // 1. Slider / Banner Image Setup
         $banner_image = get_template_directory_uri() . '/public/images/items-judges.webp'; // default fallback
 
         $custom_banner_id = get_theme_mod('front_banner_image', '');
         if ( ! empty($custom_banner_id) ) {
+
             $custom_banner_url = wp_get_attachment_url($custom_banner_id);
             if ( $custom_banner_url ) {
+
                 $banner_image = esc_url($custom_banner_url);
+                
             }
+
         }
         
         // 4. Slide Buttons
-        $banner_url =esc_url( '#main');                             
-        if(get_theme_mod('front_banner_url','') !='')
-        {
-            $button_url = get_theme_mod('front_banner_url','');
-        }
+        $button_url =esc_url( '#main');                             
                             
         $banner_label =esc_html( 'Scroll');                             
-        if(get_theme_mod('front_banner_label','') !='')
-        {
+        if(get_theme_mod('front_banner_label','') !=''){
             $button_label = get_theme_mod('front_banner_label',''); 
         }
 
-    ?>
+        
+        // Define Banner Classes
+        if ( is_front_page() ){ 
 
-    class="<?php 
+            $banner_class = 'banner__front bg-image-center'; // FrontPage Banner Class
 
-        if (is_front_page()){ 
+        } elseif ( is_home() ||  is_archive() || is_singular('services') || is_singular('people') ) {
 
-            echo esc_attr('banner__front bg-image-center'); 
+            $banner_class = 'banner__normal'; // home/blog page banner class          
 
-        } elseif (is_singular('post')) {
+        } elseif (is_singular() && ! is_page()) {
 
-            echo esc_attr('banner__single_post bg-image-center');
-
-        } elseif (is_singular('projects')) {
-
-            echo esc_attr('banner__single_project bg-image-center');
-
-        } elseif (is_home()) {
-
-            echo esc_attr('banner__taxes bg-image-center'); 
-
-        } elseif (is_archive() || is_singular('people') || is_page('contact')) {
-
-            echo esc_attr('banner__taxes bg-image-center'); 
+            $banner_class = 'banner__stretch'; // Single Post Type Banner Class
 
         } else {
 
-            echo esc_attr('banner__pages bg-image-center'); 
+            $banner_class = 'banner__normal'; // Other Banner Classess
         
-        } ?>" 
-
-    style="background-image: url('<?php 
-
+        }
+                
+        
+        // Define Banner URL
         if (is_front_page()) { 
 
-            echo esc_url($banner_image); 
+            $banner_url = $banner_image;
 
         } elseif (is_home()) {
 
-            echo esc_url(get_header_image()); 
+            $posts_page_id = get_option( 'page_for_posts' );
+            $post_image_id = get_post_thumbnail_id( $posts_page_id );
+            $banner_url = wp_get_attachment_url( $post_image_id ) ?? '';
 
-        } elseif (has_post_thumbnail()) {
+        } elseif ( is_category() && ! is_tag() ) {
+                                
+            $category_object = get_queried_object();
+             $category_image_id = get_term_meta( $category_object->term_id, 'banner', true );
 
-            echo esc_url(get_the_post_thumbnail_url(null, 'post-thumbnail')); 
-            
-        } ?>')"
+            if ($category_image_id) {
+
+                $banner_url = wp_get_attachment_url($category_image_id);
+
+            } else {
+
+                $banner_url = get_the_post_thumbnail_url(null, 'post-thumbnail');
+
+            }            
+                    
+        } elseif ( is_tax() && ! is_tag() ) {
+
+            $post_type = get_post_type();
+            $post_type_object = get_post_type_object( $post_type );
+            $page_slug = $post_type_object->name;
+
+            // Find a page with the same slug as the post type
+             $page = get_page_by_path($page_slug);
+            $banner_url = ($page && has_post_thumbnail( $page->ID ) ) ? get_the_post_thumbnail_url( $page->ID, 'post-thumbnail' ) :  '';
+
+        } elseif ( is_singular('people') || is_post_type_archive() || is_tax() ) {
+                                
+            $post_type_object = get_queried_object();
     
->
+            // Get the post type name differently based on context
+            if (is_singular('people')) {
+                $post_type = 'people'; // You already know it's 'people'
+            }             
+            else {
+                $post_type = get_queried_object()->name; // Archive: returns post type object
+            }
 
-    <!-- Overlay -->
-    <div class="banner-overlay d-flex flex-column">
-        
-        <div class="banner-overlay-inner container-app">
+            // Find a page with the same slug as the post type
+            $page = get_page_by_path($post_type);
+            $banner_url = ($page && has_post_thumbnail( $page->ID ) ) ? get_the_post_thumbnail_url( $page->ID, 'post-thumbnail' ) :  '';
+                    
+        } elseif ( has_post_thumbnail() ) {
 
-            <?php 
-                if(is_front_page()) { 
+            $banner_url = get_the_post_thumbnail_url(null, 'post-thumbnail'); 
+            
+        } 
+    
+    ?>
+
+    <section class="<?php echo esc_attr( $banner_class ); ?> bg-image-center" style="<?php echo $banner_url ? 'background-image: url(' . esc_url( $banner_url ) . ');' : ''; ?>" >
+
+        <!-- Overlay -->
+        <div class="banner-overlay d-flex flex-column">
+            
+            <div class="banner-overlay-inner container-app">
+
+                <?php  if( is_front_page() ) { 
 
                     get_template_part('template-parts/header/front-banner-texts');
 
@@ -88,22 +121,21 @@
 
                     get_template_part('template-parts/header/page-header');
 
-                } 
-            ?>
+                } ?>
+
+            </div>
+
+            <?php if ( is_front_page() ) { ?>
+
+                <a id=" " class="scroll-down-button" data-target="<?php echo esc_url($button_url); ?>">
+
+                    <span class="text scroll-texts"><?php echo esc_html($banner_label); ?></span>
+                    <span class="arrow fas fa-chevron-circle-down"></span>
+
+                </a>
+
+            <?php } ?>
 
         </div>
 
-        <?php if (is_front_page()) { ?>
-
-            <a id=" " class="scroll-down-button" data-target="<?php echo esc_url($banner_url); ?>">
-
-                <span class="text scroll-texts"><?php echo esc_html($banner_label); ?></span>
-                <span class="arrow fas fa-chevron-circle-down"></span>
-
-            </a>
-
-        <?php } ?>
-
-    </div>
-
-</section>
+    </section>
