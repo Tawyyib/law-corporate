@@ -8,8 +8,8 @@
                 $service_section_title = get_post_meta($post->ID, 'service_section_title', true);
             }
             $service_section_desc = esc_html('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Adipiscing diam donec adipiscing tristique risus nec.');
-            if (get_post_meta($post->ID, 'service_section_desc', true) != '') {
-                $service_section_desc = get_post_meta($post->ID, 'service_section_desc', true);
+            if (get_post_meta($post->ID, 'service_section_sub', true) != '') {
+                $service_section_desc = get_post_meta($post->ID, 'service_section_sub', true);
             }
 
     ?>
@@ -24,8 +24,7 @@
 
             <div class="<?php echo esc_attr('section-header mb-6'); ?>" >
                 <h2 class="<?php echo esc_attr('mb-0'); ?>" ><?php echo esc_html($service_section_title); ?></h2>
-                <!--<p ><?php // echo esc_html($service_section_desc); ?></p>-->
-                <!--<hr>-->
+                <p ><?php echo esc_html($service_section_desc); ?></p>
             </div>
                 
             <!-- section content -->     

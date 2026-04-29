@@ -33,8 +33,8 @@
 
                             get_template_part('template-parts/content/message');
 
-                            get_template_part('template-parts/front/project-counter');
+                            //get_template_part('template-parts/front/project-counter');
 
-                            get_template_part('template-parts/content/people');
+                            //get_template_part('template-parts/content/people');
                             
                         }; ?>

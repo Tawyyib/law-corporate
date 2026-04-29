@@ -32,9 +32,9 @@
 ?>
 
      <!-- Front-Page Intro Summary -->
-    <section class="front-about py-7 my-0" style="background-image: url('/public/images/industrial-concept.webp');" >
+    <section class="<?php echo esc_attr('front-about py-7 my-0 '); ?>">
 
-        <div class="<?php echo esc_attr('front-about__inner'); ?>" >
+        <div class="<?php echo esc_attr('front-about__inner container-app'); ?>" >
                 
             <!-- section thumbnail -->
 
@@ -62,19 +62,23 @@
 
             <!-- section body -->
 
-            <div class="<?php echo esc_attr('front-about__body'); ?>">
+            <div class="<?php echo esc_attr('front-about__body bg-ligh'); ?>">
 
-                <h3 class="<?php echo esc_attr('front-about__body-title mb-3'); ?>"><?php echo esc_html($intro_header); ?></h3>
+                <h3 class="<?php echo esc_attr('front-about__body-title mb-2'); ?>"><?php echo esc_html($intro_header); ?></h3>
 
-                <div class="<?php echo esc_attr('front-about__body-content container-ap mb-4'); ?>">
+                <div class="<?php echo esc_attr('front-about__body-content mb-3'); ?>">
 
-                    <?php echo wpautop(wp_kses_post($intro_body)); ?>
+                     <?php if (!empty($intro_body)) { ?>
+
+                        <?php echo wpautop(wp_kses_post($intro_body)); ?>
+
+                    <?php } ?>
                                                                                                                                      
                 </div>
                                     
                 <div class="<?php echo esc_attr('text-cente') ?>" >
                     
-                    <a href="<?php if (function_exists('get_about_permalink')) { echo get_about_permalink(); } ?>" class="<?php echo esc_attr('btn btn-alternate')?>"><?php echo esc_html('Know More'); ?></a>
+                <a href="<?php if (function_exists('get_about_permalink')) { echo get_about_permalink(); } ?>" class="<?php echo esc_attr('btn btn-alternate')?>"><?php echo esc_html('Know More'); ?></a>
                                 
                 </div>
 

@@ -46,6 +46,9 @@
         }
                 
         
+        // Declare Null Url
+        $banner_url= '';
+
         // Define Banner URL
         if (is_front_page()) { 
 

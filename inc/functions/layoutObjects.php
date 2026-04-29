@@ -556,6 +556,103 @@ if(! function_exists('lc_post_navigation')){
 
     }
 
+    // Get Page Post Featured Image Data by slug
+    if(!function_exists('get_featured_image_data')){
+
+        /**
+         * Get both featured image HTML and URL for a page found by slugs
+         * 
+         * @param array $slugs Array of slugs to check in order
+         * @param string $image_class Optional CSS class for the image
+         * @return array ['html' => string, 'url' => string]
+         */
+        function get_featured_image_data ( $slugs = ['slug-1', 'slug-2'], $image_class = 'banner-image-class' ) {
+            
+            $placeholder_url = get_template_directory_uri() . '/public/images/image-placeholder.webp';
+            $page_object = null;
+            
+            // Find page by slug
+            foreach ($slugs as $slug) {
+                $page_object = get_page_by_path($slug);
+                if (!empty($page_object)) break;
+            }
+            
+            $page_id = $page_object->ID;
+            
+            // Return both HTML and URL
+            if ($page_object && has_post_thumbnail($page_id)) {
+                return [
+                    'img' => get_the_post_thumbnail($page_id, 'full', array( 'class' => $image_class ) ),
+                    'url'  => get_the_post_thumbnail_url($page_id, 'full')
+                ];
+            } else {
+                return [
+                    'img' => '<img src="' . esc_url($placeholder_url) . '" alt="" class="' . esc_attr($image_class) . '">',
+                    'url'  => $placeholder_url
+                ];
+            }
+        }
+
+        // Usage Instructions:
+        // 1 - $featured_image_data = get_featured_image_data(['services', 'competency']);
+        // 2 - $featured_image = $featured_image_data['img'];
+        // 3 - $featured_image_url = $featured_image_data['url'];
+
+    }
+
+    // Get Page Post Data by slug for Terms
+    if ( ! function_exists('get_pagepost_data')) {
+
+        /**
+         * Get page content by matching term slug
+         * 
+         * @param WP_Term $term The term object
+         * @return array|false Returns page data or false if no matching page
+         */
+        function get_pagepost_data ( $term, $thumbnail_class = [] ) {
+            
+            if ( ! $term || !isset ( $term->slug ) ) {
+                return false;
+            }
+            
+            $page = get_page_by_path( $term->slug );
+            
+            if ( ! $page ) {
+                return false;
+            }
+
+            // Build thumbnail HTML with custom class if provided
+            $thumbnail_html = '';
+            if (has_post_thumbnail($page)) {
+                $args = [];
+                if (!empty($thumbnail_class)) {
+                    $args['class'] = $thumbnail_class;
+                }
+                $thumbnail_html = get_the_post_thumbnail($page, 'full', $args);
+            }
+
+            return [
+                'id' => $page->ID,
+                'title' => get_the_title($page),
+                'content' => apply_filters('the_content', $page->post_content),
+                'excerpt' => get_the_excerpt($page),
+                'thumbnail_url' => has_post_thumbnail($page) ? get_the_post_thumbnail_url($page, 'full') : '',
+                'thumbnail_html' => $thumbnail_html,
+                'permalink' => get_permalink($page),
+            ];
+
+        }
+
+        // Usage in your term template
+        // $term = get_queried_object();
+        // $page_data = get_page_content_by_term_slug($term);    
+
+        // if ($page_data) {
+            // Display the page content
+        // }
+
+    }
+
     /** SIDE BAR SECTIION */
 
     /**  PROJECT ITEM RELATED OBJECTS  **/

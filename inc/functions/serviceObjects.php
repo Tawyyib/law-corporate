@@ -267,3 +267,195 @@
         }
         
     }
+        
+    /** 
+     * RELATED SERVICES SIDEBAR METADATA 
+     * Displays RELATIVES sERVICES in a structured sidebar format
+     */
+    if (!function_exists('lc_services_rel')){
+        
+        function lc_services_rel(){
+
+            /**
+             * Logic to pull related 'services' based on the 'competency' taxonomy.
+             * This ensures strict post-type separation and excludes the current post.
+             */
+
+            // 1. Initialize to prevent errors if logic is skipped or terms are missing
+            $tax_services = null;
+            $current_post_id = get_the_ID();
+
+            // 2. Get terms associated with the current post within the 'competency' taxonomy
+            $terms = get_the_terms( get_the_ID(), 'competency' );
+
+            //
+            if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+
+                $term_ids = array_map( function( $term ) {
+
+                    return $term->term_id;
+
+                }, $terms );
+                
+                // Query for related posts
+                $args = array(
+                    'post_type' => 'services',
+                    'post_status' => 'publish',
+                    'posts_per_page' => -1,
+                    'tax_query' => array(
+                        array(
+                            'taxonomy' => 'competency',
+                            'field' => 'term_id',
+                            'terms' => $term_ids,
+                            'operator' => 'IN',               // Pulls posts that have ANY of the matching term IDs
+                        ),
+                    ),
+                    'orderby'        => 'title',              // Sort alphabetically for a "collation" feel
+                    'order'          => 'ASC',
+                );
+
+                // Only exclude if we are on a single post page
+                if ( is_singular() ) {
+
+                    $args['post__not_in'] = [ $current_post_id ];
+                    $args['posts_per_page'] = 4;
+
+                }
+                
+                $tax_services = new WP_Query( $args );
+
+                echo '<aside  class="' . esc_attr('service-aside col-md-12') . '" >';
+                    
+                if ( is_singular() ) {
+
+                echo  '<h4 class="' . esc_html('side-item__header d-flex pe-3 mb-2') . '"><span>' . esc_html('Related Services') . '</span><i class="'  .  esc_attr('fas fa-folder-tree ms-4') .  '"></i></h4>';
+
+                } else {
+
+                echo  '<h4 class="' . esc_html('side-item__header d-flex pe-3 mb-2') . '"><span>' . esc_html('How We Can Help') . '</span><i class="'  .  esc_attr('fas fa-pen-nib ms-4') .  '"></i></h4>';
+                
+                }
+                echo  '<hr>';
+                
+                    if ( $tax_services && $tax_services instanceof WP_Query && $tax_services->have_posts() ) {
+
+                        // list all services related
+                        $service_item = '<ul class="side-item__list">';
+
+                        while ( $tax_services->have_posts() ){
+                                    
+                            $tax_services->the_post();
+                                    
+                            $service_item .=  '<li><a href="' ;
+                            $service_item .=    get_the_permalink();
+                            $service_item .=   '" class="d-flex align-items-center justify-content-between bg-light">';
+                            $service_item .=   '<span class="' . esc_attr('term_title') . '" >';
+                            $service_item .=   get_the_title() . '</span>';
+                            $service_item .=   '<span class="' . esc_attr('arrow') . '"><i class="'  .  esc_attr('fas fa-chevron-circle-right') .  '"></i></span></a></li>';
+
+                        }
+
+                        $service_item .=   '</ul>';
+
+                        echo $service_item;
+
+                        wp_reset_postdata();
+
+                    } else {
+
+                        echo '<p class="' . esc_attr('  ') . '">' . esc_html__('No services listed yet..', "law-corporate") . '.</p>';
+                        
+                    }
+                        
+            }
+
+            echo '</aside>';
+        
+        }
+
+    }
+
+    /** 
+     * TAXONOMY TERM SERVICES SIDEBAR METADATA 
+     * Displays Taxonomy Terms Services in a structured sidebar format
+     */
+    if ( ! function_exists ( 'lc_tax_services' )) {
+
+        function lc_tax_services (){
+
+            // Initialize the variable at the top of your file or before line 75
+            $tax_services = null;
+                    
+            // get terms associated with the current post.
+            $terms = get_the_terms( get_the_ID(), 'competency' );
+
+            // checks if terms (services) are not empty
+            if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+                        
+                $term_ids = array_map( function( $term ) {
+
+                    return $term->term_id;
+
+                }, $terms );
+                                            
+                // Query for related posts
+                $args = array(
+                    'post_type' => 'services',
+                    'post_status' => 'publish',
+                    //'posts_per_page' => 4,
+                    'tax_query' => array (
+                        array(
+                            'taxonomy' => 'competency',
+                            'field' => 'term_id',
+                            'terms' => $term_ids,
+                        ),
+                    ),
+                            
+                    //'post__not_in' => array( $post->ID ),
+                );
+                
+                $tax_services = new WP_Query($args);
+
+            }
+
+            ?>
+                        
+                <!-- taxonomy's child posts -->
+                <div class="term-posts">
+
+                    <h4 class="term-posts__header d-flex"><span><?php echo __( 'Core Services listing', 'law-corporate' ); ?></span><i class="fas fa-pen-nib"></i></h4>
+                    <hr>
+                                                                                                
+                    <!-- list all posts related to the taxonomy term -->
+
+                    <?php if ( $tax_services && $tax_services instanceof WP_Query && $tax_services->have_posts() ){ ?>
+
+                        <ul class="term-posts__list" >
+                                        
+                            <?php while ( $tax_services->have_posts() ){
+                                    
+                            $tax_services-> the_post(); ?>
+                                            
+                                <li class="term-posts__list-item bg-light" ><?php lc_service_card() ;?></li>                                                                                           
+                        
+                            <?php } 
+
+                                wp_reset_postdata(); 
+                                        
+                            ?>
+
+                        </ul>     
+
+                    <?php } else { 
+                                    
+                        echo '<p class="'. esc_attr('no-content px-3') .'"  >'. esc_html__('No services listed yet.', 'law-corporate') . '</p>';
+
+                    } ?>    
+                                
+                </div>
+                
+            <?php         
+
+        }
+
+    }
