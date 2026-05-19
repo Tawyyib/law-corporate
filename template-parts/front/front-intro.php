@@ -2,53 +2,60 @@
 
     // Ensure this code runs within the WordPress environment
     if (!defined('ABSPATH')) { exit; }            
-
-    // 1. Placeholder default
-    $default_body = implode(' ', [
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-        'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-    ]);
-
-    // 2. Get the custom section title (will be empty string if not set)
+    
+    // 1. Get the custom value (will be empty string if not set)
     $custom_intro_header = get_post_meta($post->ID, 'intro_header', true);
 
-    // 3. Use the custom value if it exists, otherwise use the default
-    $intro_header = $custom_intro_header ? : 'Innovative Ideation is our Thing';
-    $intro_body = get_post_meta($post->ID, 'intro_body', true) ? : $default_body;          
-
-    // Try multiple possible slugs for the About page
-    foreach (['about', 'about-us'] as $slug) {
-        if ($page = get_page_by_path($slug)) {
-            $page_object = $page;
-            break;
-        }
+    // 2. Use the custom value if it exists, otherwise use the default
+    $intro_header = !empty($custom_intro_header) ? $custom_intro_header : 'Innovative Ideation is our Thing';
+                
+    $intro_body = esc_html('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ');
+    $intro_body .= esc_html('Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ');
+    $intro_body .= esc_html('Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.');
+    $intro_body .= esc_html('Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
+    $intro_body .= esc_html('Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.');
+    if (get_post_meta($post->ID, 'intro_body', true) != '') {
+        $intro_body = get_post_meta($post->ID, 'intro_body', true);
     }
 
+    // Define the slugs you want to check for.
+    $slug_1 = 'about';
+    $slug_2 = 'about-us';
+
+    // Get the page object using the first slug.
+    $page_object = get_page_by_path($slug_1);
+
+    // If the first page doesn't exist, try the second one.
+    if (empty($page_object)) {
+        $page_object = get_page_by_path($slug_2);
+    }
+    
     $page_id = $page_object->ID ?? 0;
+
+    // link-button properties
+    $button_label = __( 'Know More', 'law-corporate' );
+    $post_url = esc_url (lc_get_page_link ( 'about' ));
+    $button_classes = esc_attr ( 'btn-alternate' );        
+    $icon_classes = esc_attr( 'fas fa-arrow-right' );        
 
 ?>
 
      <!-- Front-Page Intro Summary -->
-    <section class="<?php echo esc_attr('front-about py-7 my-0 '); ?>">
+    <section class="front-about py-7 my-0 bg-light">
 
-        <div class="<?php echo esc_attr('front-about__inner container-app'); ?>" >
+        <div class="front-about__inner container-app" >
                 
             <!-- section thumbnail -->
 
-            <figure class="<?php echo esc_attr('front-about__banner'); ?>">
+            <figure class="front-about__banner">
 
                 <?php 
 
                     // Check if a page was found and if it has a featured image.
-                    if ($page_object && has_post_thumbnail($page_object->ID)) {
+                    if ($page_object && has_post_thumbnail($page_id )) {
                             
                         // If a page with a featured image is found, get its ID.
-                        $featured_image_id = get_post_thumbnail_id($page_object->ID);
-
-                        $featured_image_html = get_the_post_thumbnail($page_object->ID, 'full', array( 'class' => 'front-about__banner-image' ) );
+                        $featured_image_html = get_the_post_thumbnail($page_id, 'full', array( 'class' => 'front-about__banner-image' ) );
 
                         echo $featured_image_html;
 
@@ -62,11 +69,11 @@
 
             <!-- section body -->
 
-            <div class="<?php echo esc_attr('front-about__body bg-ligh'); ?>">
+            <div class="front-about__body">
 
-                <h3 class="<?php echo esc_attr('front-about__body-title mb-2'); ?>"><?php echo esc_html($intro_header); ?></h3>
+                <h2 class="front-about__body-title"><?php echo esc_html($intro_header); ?></h2>
 
-                <div class="<?php echo esc_attr('front-about__body-content mb-3'); ?>">
+                <div class="front-about__body-content">
 
                      <?php if (!empty($intro_body)) { ?>
 
@@ -76,10 +83,10 @@
                                                                                                                                      
                 </div>
                                     
-                <div class="<?php echo esc_attr('text-cente') ?>" >
+                <div class="link-meta" >
                     
-                <a href="<?php if (function_exists('get_about_permalink')) { echo get_about_permalink(); } ?>" class="<?php echo esc_attr('btn btn-alternate')?>"><?php echo esc_html('Know More'); ?></a>
-                                
+                    <?php lc_cta_button( $button_label, $post_url, $button_classes, '', '', '', $icon_classes ) ?>
+
                 </div>
 
             </div>

@@ -7,40 +7,22 @@
 
             ?>
 
-                <div class="<?php echo esc_attr('service-card col-sm-12'); ?>" > 
+                <div class="service-card d-flex col-sm-12" > 
                 
-                    <a href="<?php echo the_permalink() ?>"  class="<?php echo esc_attr('service-card__term d-flex align-items-center justify-content-between p-3'); ?>" ><span class="<?php echo esc_attr(''); ?>" ><?php the_title(); ?></span><i class="<?php echo esc_attr('fas fa-chevron-circle-right'); ?>"></i></a>
+                    <a href="<?php echo the_permalink() ?>"  class="service-card__term d-flex" >
+                        <span class="d-flex" >
+                            <?php the_title(); ?>
+                            <i class="fas fa-info-circle"></i>
+                        </span>                        
+                    </a>
                                         
-                    <span class="<?php echo esc_attr('service-card__excerpt px-3 py-2 bg-dar'); ?>"  ><?php echo the_excerpt(); ?></span>
+                    <span class="service-card__excerpt px-3 py-2"  ><?php echo the_excerpt(); ?></span>
                                                                                               
                 </div>
 
             <?php
 
         }
-        add_action('', 'lc_service_card');
-
-    }
-    
-    /**     SERVICE CARD -2    */
-    if(! function_exists('lc_service_card_2')){
-
-        function lc_service_card_2(){
-
-            ?>
-
-                <div class="service-card col-sm-12 accordion-item" > 
-                
-                    <a href="<?php echo the_permalink() ?>"  class="<?php echo esc_attr('service-card__term d-flex align-items-center justify-content-between p-3'); ?>" ><span class="<?php echo esc_attr(''); ?>" ><?php the_title(); ?></span><i class="<?php echo esc_attr('fas fa-chevron-circle-right'); ?>"></i></a>
-                                        
-                    <span class="<?php echo esc_attr('service-card__excerpt px-3 py-2 bg-dar'); ?>"  ><?php echo the_excerpt(); ?></span>
-                                                                                              
-                </div>
-
-            <?php
-
-        }
-        add_action('', 'lc_service_card_2');
 
     }
 
@@ -122,7 +104,11 @@
         
     }
 
-    if(! function_exists('lc_tax_cards')){
+    /**
+     *  Custom Taxonomy Terms Listing
+     *  FrontPage Accordion
+     */
+    if(! function_exists('lc_tax_terms_accordion')){
 
         /**
          * Output taxonomy cards, excluding a specific term slug.
@@ -130,48 +116,62 @@
          * @param string $taxonomy         The taxonomy name.
          * @param string $exclude_term_slug Term slug to exclude.
          */
-
-        function lc_tax_cards ( $taxonomy, $exclude_term_slug ) {
+        function lc_tax_terms_accordion ( $taxonomy, $exclude_term_slug, $default_index = 1 ) {
 
             $exclude_term = get_term_by( 'slug', $exclude_term_slug, $taxonomy );
 
             // Ensure taxonomy exists
-            if ( ! taxonomy_exists( $taxonomy ) ) { return; }
+            if ( ! taxonomy_exists( $taxonomy ) ) { 
+
+                echo '<p class="no-content extra">' . esc_html__('Taxonomy not found .........', 'law-corporate') . '</p>';
+                return; 
+
+            }
 
             // Build exclude list
             $exclude = [];
+
             if ( $exclude_term && ! is_wp_error( $exclude_term ) ) {
+
                 $exclude[] = $exclude_term->term_id;
+
             }
 
             // Get terms
             $terms = get_terms( [
                 'taxonomy'   => $taxonomy,
                 'exclude'    => $exclude,
-                'orderby'    => 'ID',
+                'orderby'    => 'id',
                 'order'      => 'ASC',
                 'hide_empty' => true,
             ] );
 
             // Check if empty or error
             if ( empty( $terms ) || is_wp_error( $terms ) ) {
-                echo '<p class="no-content extra">' . esc_html__( 'Services related content not created yet, please check back later.', 'law-corporate' ) . '</p>';
+                echo '<p class="no-content extra">' . esc_html__( 'Capability loading  ........', 'law-corporate' ) . '</p>';
                 return;
             }
 
             // If on a taxonomy archive, prefer opening the queried term's panel
             $current_term_id = 0;
+
             if ( is_tax() || is_category() || is_tag() ) {
+
                 $queried = get_queried_object();
+
                 if ( $queried && isset( $queried->term_id ) ) {
+
                     $current_term_id = (int) $queried->term_id;
+
                 }
+
             }
 
-            $i = 1;
+            // Initialize count to '0' or '1' to set start point
+            $counter = 1;
 
             // Fallback: use first panel if no queried term
-            $first = true;
+             $first = true;
 
             foreach ( $terms as $term ) {
 
@@ -179,14 +179,15 @@
 
                 // Decide if this panel should be open
                 $is_open = false;
+
                 if ( $current_term_id && $term_id === $current_term_id ) {
 
                     $is_open = true;
 
-                } elseif ( $first && ! $current_term_id ) {
+                } elseif ( ! $current_term_id && $counter === $default_index ) {
 
-                    $is_open = true;
-                    $first   = false; // only first one
+                    $is_open  =  true; // Close
+                    $first  =   false; // only first one
 
                 }
 
@@ -195,13 +196,22 @@
                 $icon_url = $icon_id ? wp_get_attachment_url( $icon_id ) : get_template_directory_uri() . '/assets/images/placeholder-icon.svg';
 
                 // Excerpt
-                $excerpt = get_term_meta( $term->term_id, 'taxonomy-excerpt', true );
-                $excerpt = $excerpt ? esc_html( $excerpt ) : esc_html__( 'Experts with difference, top-notch services.', 'law-corporate' );
+                $excerpt = get_term_meta( $term->term_id, 'excerpt', true );
+                // With default text fallback
+                $excerpt = !empty($excerpt) 
+                    ? esc_html($excerpt) 
+                    : ( !empty($term->description) 
+                        ? wp_trim_words($term->description, 12, '...') 
+                        : esc_html__('Experts with difference, top-notch services.', 'law-corporate') 
+                    );
 
                 // Term link
                 $term_link = get_term_link( $term );
+
                 if ( is_wp_error( $term_link ) ) {
+
                     $term_link = '#';
+
                 }
 
                 // Unique collapse ID
@@ -210,58 +220,73 @@
 
                 ?>
 
-                <!-- Service Group <?php echo esc_html( $i ); ?> -->
-                 <?php $i++; ?>
+                <!-- Service Group <?php echo esc_html( $counter ); ?> -->
+                 
+                 <?php $counter++; ?>
 
-                <div class="taxo-card accordion-item <?php echo $is_open ? 'active' : ''; ?>">
-                    
+                <div class="taxo-card accordion-item<?php echo $is_open ? ' active' : ''; ?>">
+                                    
+                    <!-- header  -->
                     <div class="taxo-card__header" id="<?php echo esc_attr( $heading_id ); ?>">                                                    
 
-                        <div class="taxo-card__header-inner accordion-button <?php echo $is_open ? '' : 'collapsed'; ?>" 
-                            type="button" 
-                            data-bs-toggle="collapse" 
-                            data-bs-target="#<?php echo esc_attr( $collapse_id ); ?>" 
-                            aria-expanded="<?php echo $is_open ? 'true' : 'false'; ?>" 
-                            aria-controls="<?php echo esc_attr( $collapse_id ); ?>">
-                             
-                            <figure class="taxo-card__header-icon">
-                                <img src="<?php echo esc_url( $icon_url ); ?>" class="svg-icon" alt="<?php echo esc_attr( $term->name ); ?>">
-                            </figure> 
+                        <div class="taxo-card__header-button accordion-button <?php echo $is_open ? '' : 'collapsed'; ?>" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#<?php echo esc_attr( $collapse_id ); ?>" 
+                                aria-expanded="<?php echo $is_open ? 'true' : 'false'; ?>" 
+                                aria-controls="<?php echo esc_attr( $collapse_id ); ?>" 
+                        >
 
+                            <!-- icon  -->        
+                            <figure class="taxo-card__header-icon">
+                                <div class="svg-icon" style="
+                                        -webkit-mask-image: url(<?php echo esc_url( $icon_url ); ?>);" 
+                                        mask-image: url(<?php echo esc_url( $icon_url ); ?>); 
+                                        role="img" aria-label="<?php echo esc_attr( $term->name ); ?>">
+                                    </div>
+                            </figure>  
+
+                            <!-- title  -->            
                             <span class="taxo-card__header-title"><?php echo esc_html( $term->name ); ?></span>
 
                         </div>
 
                     </div>
 
+                    <!-- content: collapsing  -->
                     <div id="<?php echo esc_attr( $collapse_id ); ?>" 
-                        class="taxo-card__content accordion-collapse collapse <?php echo $is_open ? 'show' : ''; ?>" 
+                        class="taxo-card__collapse accordion-collapse collapse<?php echo $is_open ? ' show' : ''; ?>" 
                         aria-labelledby="<?php echo esc_attr( $heading_id ); ?>" 
-                        data-bs-parent="#taxAccordion">
-                        
-                        <div class="taxo-card__content-inner accordion-body">
+                        data-bs-parent="#taxAccordion" 
+                    >
 
-                            <p class="taxo-card__content-body"><?php echo $excerpt; ?></p>
-                            
-                            <?php 
-                                       
+                        <div class="taxo-card__body accordion-body">
+                                            
+                            <div class="taxo-card__body-description">
+                                
+                                <?php echo esc_html($excerpt); ?>
+
+                            </div> 
+                                
+                            <?php                                         
                                 $text =  esc_html__( 'Learn More', 'law-corporate' );																		
                                 $url = esc_url($term_link);																		
-                                $classes =  ['btn-slim', ];	
+                                $classes =  ['btn-slim', 'learn-more-link' ];	
+                                $type = '';
                                 $target = '';
                                 $rel = '';
-     
-                                echo lc_cta_button ($text, $url, $classes, $target, $rel);                            
-
+                                $icon_class = 'fas fa-arrow-right';
+        
+                                echo lc_cta_button ($text, $url, $classes, $type,  $target, $rel, $icon_class );                            
                             ?>
-                            
-                        </div> 
+                                
+                        </div>     
 
                     </div>
 
                 </div>
 
-            <?php
+                <?php
             }
 
         }
@@ -273,103 +298,49 @@
      * Displays RELATIVES sERVICES in a structured sidebar format
      */
     if (!function_exists('lc_services_rel')){
-        
+                
         function lc_services_rel(){
 
-            /**
-             * Logic to pull related 'services' based on the 'competency' taxonomy.
-             * This ensures strict post-type separation and excludes the current post.
-             */
+            $related_services = lc_get_related_items_query ( 'services' );
+            
+            echo '<div  class="' . esc_attr('side-item d-flex col-md-12') . '" >';
+                        
+                echo  '<h4 class="' . esc_html('side-item__header') . '">' . esc_html('Related Services') . '</h4>';
 
-            // 1. Initialize to prevent errors if logic is skipped or terms are missing
-            $tax_services = null;
-            $current_post_id = get_the_ID();
-
-            // 2. Get terms associated with the current post within the 'competency' taxonomy
-            $terms = get_the_terms( get_the_ID(), 'competency' );
-
-            //
-            if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
-
-                $term_ids = array_map( function( $term ) {
-
-                    return $term->term_id;
-
-                }, $terms );
+                //echo  '<hr>';
                 
-                // Query for related posts
-                $args = array(
-                    'post_type' => 'services',
-                    'post_status' => 'publish',
-                    'posts_per_page' => -1,
-                    'tax_query' => array(
-                        array(
-                            'taxonomy' => 'competency',
-                            'field' => 'term_id',
-                            'terms' => $term_ids,
-                            'operator' => 'IN',               // Pulls posts that have ANY of the matching term IDs
-                        ),
-                    ),
-                    'orderby'        => 'title',              // Sort alphabetically for a "collation" feel
-                    'order'          => 'ASC',
-                );
+                if ( $related_services->have_posts() ) {
 
-                // Only exclude if we are on a single post page
-                if ( is_singular() ) {
+                    // list all services related
+                    $service_item = '<ul class="side-item__list">';
 
-                    $args['post__not_in'] = [ $current_post_id ];
-                    $args['posts_per_page'] = 4;
+                    while ( $related_services->have_posts() ){
+                                    
+                        $related_services->the_post();
+                                    
+                        $service_item .=  '<li><a href="' ;
+                        $service_item .=    get_the_permalink();
+                        $service_item .=   '" class="d-flex align-items-center justify-content-between bg-light">';
+                        $service_item .=   '<span class="' . esc_attr('term_title') . '" >';
+                        $service_item .=   get_the_title() . '</span>';
+                        $service_item .=   '<span class="' . esc_attr('arrow') . '"><i class="'  .  esc_attr('fas fa-chevron-circle-right') .  '"></i></span></a></li>';
 
-                }
-                
-                $tax_services = new WP_Query( $args );
+                    }
 
-                echo '<aside  class="' . esc_attr('service-aside col-md-12') . '" >';
-                    
-                if ( is_singular() ) {
+                    $service_item .=   '</ul>';
 
-                echo  '<h4 class="' . esc_html('side-item__header d-flex pe-3 mb-2') . '"><span>' . esc_html('Related Services') . '</span><i class="'  .  esc_attr('fas fa-folder-tree ms-4') .  '"></i></h4>';
+                    echo $service_item;
+
+                    wp_reset_postdata();
 
                 } else {
 
-                echo  '<h4 class="' . esc_html('side-item__header d-flex pe-3 mb-2') . '"><span>' . esc_html('How We Can Help') . '</span><i class="'  .  esc_attr('fas fa-pen-nib ms-4') .  '"></i></h4>';
-                
+                    echo '<p class="' . esc_attr('  ') . '">' . esc_html__('No services listed yet..', "law-corporate") . '.</p>';
+                        
                 }
-                echo  '<hr>';
-                
-                    if ( $tax_services && $tax_services instanceof WP_Query && $tax_services->have_posts() ) {
-
-                        // list all services related
-                        $service_item = '<ul class="side-item__list">';
-
-                        while ( $tax_services->have_posts() ){
-                                    
-                            $tax_services->the_post();
-                                    
-                            $service_item .=  '<li><a href="' ;
-                            $service_item .=    get_the_permalink();
-                            $service_item .=   '" class="d-flex align-items-center justify-content-between bg-light">';
-                            $service_item .=   '<span class="' . esc_attr('term_title') . '" >';
-                            $service_item .=   get_the_title() . '</span>';
-                            $service_item .=   '<span class="' . esc_attr('arrow') . '"><i class="'  .  esc_attr('fas fa-chevron-circle-right') .  '"></i></span></a></li>';
-
-                        }
-
-                        $service_item .=   '</ul>';
-
-                        echo $service_item;
-
-                        wp_reset_postdata();
-
-                    } else {
-
-                        echo '<p class="' . esc_attr('  ') . '">' . esc_html__('No services listed yet..', "law-corporate") . '.</p>';
                         
-                    }
-                        
-            }
-
-            echo '</aside>';
+                    
+            echo '</div>';
         
         }
 
@@ -385,9 +356,11 @@
 
             // Initialize the variable at the top of your file or before line 75
             $tax_services = null;
+
+            $taxonomy = lc_get_current_taxonomy ();
                     
             // get terms associated with the current post.
-            $terms = get_the_terms( get_the_ID(), 'competency' );
+            $terms = get_the_terms( get_the_ID(), $taxonomy );
 
             // checks if terms (services) are not empty
             if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
@@ -405,13 +378,12 @@
                     //'posts_per_page' => 4,
                     'tax_query' => array (
                         array(
-                            'taxonomy' => 'competency',
+                            'taxonomy' => $taxonomy,
                             'field' => 'term_id',
                             'terms' => $term_ids,
                         ),
                     ),
                             
-                    //'post__not_in' => array( $post->ID ),
                 );
                 
                 $tax_services = new WP_Query($args);
@@ -421,22 +393,25 @@
             ?>
                         
                 <!-- taxonomy's child posts -->
-                <div class="term-posts">
+                <aside class="term-posts">
 
-                    <h4 class="term-posts__header d-flex"><span><?php echo __( 'Core Services listing', 'law-corporate' ); ?></span><i class="fas fa-pen-nib"></i></h4>
+                    <h4 class="term-posts__header d-flex">
+                        <span><?php echo __( 'What we\'ve delivered', 'law-corporate' ); ?></span>
+                        <i class="fas fa-pen-nib"></i>
+                    </h4>
                     <hr>
                                                                                                 
                     <!-- list all posts related to the taxonomy term -->
 
                     <?php if ( $tax_services && $tax_services instanceof WP_Query && $tax_services->have_posts() ){ ?>
 
-                        <ul class="term-posts__list" >
+                        <div class="term-posts__list posts_list" >
                                         
                             <?php while ( $tax_services->have_posts() ){
                                     
                             $tax_services-> the_post(); ?>
                                             
-                                <li class="term-posts__list-item bg-light" ><?php lc_service_card() ;?></li>                                                                                           
+                                <li class="term-posts__list-item" ><?php lc_service_card () ;?></li>                                                                                           
                         
                             <?php } 
 
@@ -444,7 +419,7 @@
                                         
                             ?>
 
-                        </ul>     
+                        </div>     
 
                     <?php } else { 
                                     
@@ -452,10 +427,257 @@
 
                     } ?>    
                                 
-                </div>
+                    <?php // get_template_part('template-parts/content/aside-contact'); ?>
+
+                </aside>
                 
-            <?php         
+            <?php
+            
+            //get_template_part('template-parts/content/aside-contact');
 
         }
+
+    }
+    
+    /** 
+     * TAXONOMY TERM SERVICES SIDEBAR METADATA 
+     * Displays Taxonomy Terms Services in a structured sidebar format
+     */
+    if ( ! function_exists( 'lc_tax_terms_rel' ) ) {
+
+        function lc_tax_terms_rel ( $taxonomy = null, $limit = -1, $default_index = 0, $exclude_current = true ) {
+            
+            // Auto-detect taxonomy if not provided
+            if (!$taxonomy) {
+                $taxonomy = lc_get_current_taxonomy();
+            }
+            
+            if (!$taxonomy) {
+                echo '<p class="no-content extra">' . esc_html__('Taxonomy not found .........', 'law-corporate') . '</p>';
+                return;
+            }
+            
+            // Get current term ID (for exclusion if needed)
+            $current_term_id = null;
+
+            if ($exclude_current && is_tax()) {
+
+                $current_term = get_queried_object();
+
+                if (is_a($current_term, 'WP_Term')) {
+                    $current_term_id = $current_term->term_id;
+                }
+
+            }
+            
+            // Build query arguments
+            $args = [
+                'taxonomy' => $taxonomy,
+                'hide_empty' => true,
+                'orderby' => 'id',
+                'order' => 'ASC',
+                'number' => $limit > 0 ? $limit : null,
+            ];
+            
+            // Exclude current term if requested
+            if ($current_term_id) {
+
+                $args['exclude'] = [$current_term_id];
+
+            }
+            
+            $terms = get_terms($args);            
+            if (empty($terms) || is_wp_error($terms)) {
+                echo '<p class="no-content extra">' . esc_html__( 'Capability loading  ........', 'law-corporate' ) . '</p>';
+                return;                
+            }
+
+            // Get current queried term ID and calculate next term ID
+            $queried_term_id = 0;
+            $target_term_id = 0;
+
+            if (is_tax() || is_category() || is_tag()) {
+
+                $queried = get_queried_object();
+
+                if ($queried && isset($queried->term_id)) {
+
+                    $queried_term_id = (int) $queried->term_id;
+                    
+                    // Find next term from the current $terms list
+                    if (!empty( $terms ) && !is_wp_error( $terms )) {
+
+                        $term_ids = wp_list_pluck( $terms, 'term_id' );
+                        $current_index = array_search( $queried_term_id, $term_ids );
+
+                        $target_index = $current_index + $default_index; // goes from 1 -> 3 (0-based: 0 -> 2)
+
+                        if ( $target_index !== false && isset( $term_ids[ $target_index ]) ) {
+
+                            $target_term_id = $term_ids[ $target_index ];
+
+                        }  else {
+
+                            // Fallback: open first or last term
+                            $target_term_id = $term_ids[0] ?? 0;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            // Initialize count to '0' or '1' to set start point
+            $counter = 1;
+            
+            // Fallback: use first panel if no queried term
+             $first = true;
+
+            ?>
+                
+                <aside class="term-posts accordion" id="taxAccordion">
+
+                    <h4 class="term-posts__header d-flex mb-4">
+                        <?php echo esc_html__('Other Capabilities', 'law-corporate'); ?>
+                    </h4>
+                    <!--<hr>-->
+                    
+                    <div class="term-posts__list terms__list">
+
+                        <?php foreach ($terms as $term) : 
+
+                            $term_id = (int) $term->term_id;
+
+                            // Decide if this panel should be open
+                            $is_open = false;
+                            
+                            // Open the next term (not the current one)
+                            if ( $target_term_id && $term_id === $target_term_id ) {
+
+                                $is_open = true;
+
+                            } 
+                            // If no next term exists (e.g., current is last), open the first term
+                            elseif (!$target_term_id && $counter === $default_index) {
+
+                                $is_open = true;
+                                
+                            }
+
+                            // Icon
+                            $icon_id  = get_term_meta( $term->term_id, 'icon', true );
+                            $icon_url = $icon_id ? wp_get_attachment_url( $icon_id ) : get_template_directory_uri() . '/assets/images/placeholder-icon.svg';
+
+                            // Excerpt
+                            $excerpt = get_term_meta( $term->term_id, 'excerpt', true );
+                            
+                            // With default text fallback
+                            $excerpt = !empty($excerpt) 
+                                ? esc_html($excerpt) 
+                                : ( !empty($term->description) 
+                                    ? wp_trim_words($term->description, 12, '...') 
+                                    : esc_html__('Experts with difference, top-notch services.', 'law-corporate') 
+                                );
+
+                            // Term link
+                            $term_link = get_term_link( $term );
+
+                            if ( is_wp_error( $term_link ) ) {
+
+                                $term_link = '#';
+
+                            }
+
+                            // Unique collapse ID
+                            $collapse_id = 'collapse-' . $term_id;
+                            $heading_id  = 'heading-' . $term_id;
+                                                    
+                        ?>
+
+                            <!-- Service Group <?php echo esc_html( $counter ); ?> -->                        
+                            <?php $counter++; ?>
+
+                            <div class="side-term accordion-item<?php echo $is_open ? ' active' : ''; ?>" >
+                                    
+                                <!-- header  -->
+                                <div id="<?php echo esc_attr( $heading_id ); ?>" class="side-term__header">
+
+                                    <div class="side-term__header-button accordion-button <?php echo $is_open ? '' : 'collapsed'; ?>"
+                                        type="button" 
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#<?php echo esc_attr( $collapse_id ); ?>" 
+                                        aria-expanded="<?php echo $is_open ? 'true' : 'false'; ?>" 
+                                        aria-controls="<?php echo esc_attr( $collapse_id ); ?>"
+                                    >
+                                    
+                                        <!-- icon  -->
+                                        <figure class="side-term__icon">                            
+                                            <div  class="svg-icon" style="
+                                                -webkit-mask-image: url(<?php echo esc_url( $icon_url ); ?>);" 
+                                                mask-image: url(<?php echo esc_url( $icon_url ); ?>); 
+                                                role="img" aria-label="<?php echo esc_attr( $term->name ); ?>">                                                
+                                            </div>                                                
+                                        </figure>
+                                    
+                                        <!-- title  -->                                            
+                                        <h5 class="side-term__title" ><?php echo esc_html($term->name); ?></h5>
+
+                                    </div>
+
+                                </div>
+                                
+                                <!-- content: collapsing  -->
+                                <div id="<?php echo esc_attr( $collapse_id ); ?>" 
+                                    class="side-term__collapse accordion-collapse collapse<?php echo $is_open ? ' show' : ''; ?>"
+                                    aria-labelledby="<?php echo esc_attr( $heading_id ); ?>" 
+                                    data-bs-parent="#taxAccordion" 
+                                >                                
+
+                                    <div class="side-term__body accordion-body">
+                                        
+                                        <div class="side-term__body-description">
+                                            
+                                            <?php if ($excerpt) : ?>
+        
+                                            <?php echo esc_html( $excerpt ); ?>
+                                                        
+                                            <?php endif; ?>
+
+                                        </div>
+                                                                                    
+                                        <?php                                                     
+                                            $text =  esc_html__( 'Learn More', 'law-corporate' );																		
+                                            $url = esc_url($term_link);																		
+                                            $classes =  ['btn-slim', 'learn-more-link' ];	
+                                            $type = '';
+                                            $target = '';
+                                            $rel = '';
+                                            $icon_class = 'fas fa-arrow-right';
+                        
+                                            echo lc_cta_button ($text, $url, $classes, $type,  $target, $rel, $icon_class );                            
+
+                                        ?>
+                                        
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            
+                        <?php endforeach; ?>
+
+                    </div>
+
+                </aside>
+                
+            <?php
+        }
+
+        // Usage:
+        // lc_tax_term_rel(); // Auto-detect, show all
+        // lc_tax_term_rel('expertise', 5); // Specific taxonomy, limit to 5
+        // lc_tax_term_rel('expertise', -1, false); // Show including current term
 
     }

@@ -34,7 +34,9 @@ get_header(); ?>
    }else if(is_singular('services')){
 
       get_template_part('template-parts/singles/expertise');   
-      
+         
+      get_template_part('template-parts/content/cta-banner');
+                  
       wp_reset_postdata();
 
    } else if(is_singular('post')) {

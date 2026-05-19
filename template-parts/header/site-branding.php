@@ -1,12 +1,12 @@
-<section class=" <?php echo esc_attr(' nav-container '); ?> " ><!-- navbar -->
+<section class="nav-container" ><!-- navbar -->
 
-    <nav class="<?php echo esc_attr('nav navbar navbar-expand-lg bg-transparent'); ?> ">
+    <nav class="nav navbar navbar-expand-lg bg-transparent">
         
-        <div class=" <?php echo esc_attr(' nav-inner container-app '); ?> " >
+        <div class="nav-inner container-app" >
 
-			<div class="<?php echo esc_attr('app-brand'); ?>" >
+			<div class="app-brand" >
 
-            <?php if (function_exists('lc_site_brand')) { lc_site_brand(); } ?>
+                <?php if (function_exists('lc_site_brand')) { lc_site_brand(); } ?>
 
 			</div>
             

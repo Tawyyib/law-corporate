@@ -1,5 +1,5 @@
                                     
-					    <section id="<?php echo esc_attr('the-firm'); ?>" class="content-outlay container-app py-4_5 <?php if(! is_page('')){ echo esc_attr(' row flex-row justify-content-between '); } ?>" ><!-- CONTENT OUTLAY -->
+					    <section id="the-firm" class="content-outlay container-app py-4_5<?php if(! is_page('')){ echo esc_attr(' row flex-row justify-content-between '); } ?>" ><!-- CONTENT OUTLAY -->
                                 
                             <div class="content-inner page-content dual-body col-sm-12 py-5">
 

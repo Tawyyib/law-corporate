@@ -17,12 +17,14 @@
 
         }
         
-        // 4. Slide Buttons
-        $button_url =esc_url( '#main');                             
+        // 4. Banner Buttons
+        $button_url = esc_url( '#main');                             
                             
         $banner_label =esc_html( 'Scroll');                             
         if(get_theme_mod('front_banner_label','') !=''){
+
             $button_label = get_theme_mod('front_banner_label',''); 
+
         }
 
         
@@ -63,7 +65,7 @@
         } elseif ( is_category() && ! is_tag() ) {
                                 
             $category_object = get_queried_object();
-             $category_image_id = get_term_meta( $category_object->term_id, 'banner', true );
+            $category_image_id = get_term_meta( $category_object->term_id, 'banner', true );
 
             if ($category_image_id) {
 
@@ -77,24 +79,53 @@
                     
         } elseif ( is_tax() && ! is_tag() ) {
 
-            $post_type = get_post_type();
-            $post_type_object = get_post_type_object( $post_type );
-            $page_slug = $post_type_object->name;
+            // 1. Get the term
+            $term = get_queried_object();
+            $banner_url = ''; // default empty
 
-            // Find a page with the same slug as the post type
-             $page = get_page_by_path($page_slug);
-            $banner_url = ($page && has_post_thumbnail( $page->ID ) ) ? get_the_post_thumbnail_url( $page->ID, 'post-thumbnail' ) :  '';
-
+            if ($term && is_a($term, 'WP_Term')) {
+                
+                // Candidate slugs in order of priority
+                $candidates = [];
+                
+                // Candidate 1: term slug
+                $candidates[] = $term->slug;
+                
+                // Candidate 2: taxonomy name (if available)
+                $taxonomy = get_taxonomy($term->taxonomy);
+                if ($taxonomy && !empty($taxonomy->name)) {
+                    $candidates[] = $taxonomy->name;
+                }
+                
+                // Candidate 3: first associated post type (if available)
+                if ($taxonomy && !empty($taxonomy->object_type)) {
+                    $candidates[] = $taxonomy->object_type[0];
+                }
+                
+                // Try each candidate until we find a page with a thumbnail
+                foreach ($candidates as $slug) {
+                    $page = get_page_by_path($slug);
+                    if ($page && has_post_thumbnail($page->ID)) {
+                        $banner_url = get_the_post_thumbnail_url($page->ID, 'post-thumbnail');
+                        break; // stop at first valid page with thumbnail
+                    }
+                }
+            }
+            
         } elseif ( is_singular('people') || is_post_type_archive() || is_tax() ) {
                                 
             $post_type_object = get_queried_object();
     
             // Get the post type name differently based on context
             if (is_singular('people')) {
+
                 $post_type = 'people'; // You already know it's 'people'
+
             }             
             else {
+
                 $post_type = get_queried_object()->name; // Archive: returns post type object
+
             }
 
             // Find a page with the same slug as the post type
@@ -128,16 +159,17 @@
 
             </div>
 
-            <?php if ( is_front_page() ) { ?>
+            <?php if ( is_front_page() ) { 
 
-                <a id=" " class="scroll-down-button" data-target="<?php echo esc_url($button_url); ?>">
+                $icon_label = __( 'Scroll', 'law-corporate' );
+                $icon_id = esc_attr ( 'scroll-button' );
+                $object_class = esc_attr ( 'scroll-down-button' );
+                $data_target = esc_attr ( 'main' );
+                $icon_class = esc_attr ( 'arrow fas fa-chevron-circle-down' );
 
-                    <span class="text scroll-texts"><?php echo esc_html($banner_label); ?></span>
-                    <span class="arrow fas fa-chevron-circle-down"></span>
+                lc_scroll_to_icon( $icon_label, $icon_id, $object_class, $data_target, $icon_class );
 
-                </a>
-
-            <?php } ?>
+            } ?>
 
         </div>
 

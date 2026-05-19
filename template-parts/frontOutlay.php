@@ -1,7 +1,7 @@
-<!-- Main Content -->
-<main id="<?php echo esc_attr('main'); ?>" class="<?php echo esc_attr(' main '); ?>" >
+<!--     FrontPage Main Content      -->
+<main id="main" class="main" >
       
-    <div class="<?php echo esc_attr('main-content py-0 my-0'); ?>" >
+    <div class="main-content" >
 
         <?php get_template_part('template-parts/front/service-list'); ?>
 

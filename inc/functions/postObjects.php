@@ -22,8 +22,17 @@
     /**     BLOG POST CARD      */
     if(! function_exists('lc_post_card')){
 
-        function lc_post_card( $m_class, $class = [], $show_excerpts = true, $show_more = true){
-    
+        function lc_post_card( $m_class, $class = [], $show_excerpts = true, $show_read = true){
+            
+            $post_categories = get_the_category();
+            $primary_category = $post_categories[0] ?? null;
+
+            if ($primary_category) {
+                $category_name = $primary_category->name;
+                $category_link = get_category_link($primary_category->term_id);
+                $category_link = get_term_link($primary_category);
+            }
+
             // Safety check: Ensure $class is an array for implode to work smoothly
             if ( ! is_array( $class ) ) { $class = array(); }
 
@@ -38,16 +47,15 @@
                 <article class="<?php echo esc_attr( $full_classes ) ?>" > 
 
                     <!-- thumbnail -->
-
-                    <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" class="<?php echo esc_attr('post-card__header'); ?>" >
+                    <a href="<?php echo esc_url( get_permalink() ); ?>" title="<?php the_title_attribute(); ?>" class="<?php echo esc_attr( $m_class ); ?>__header d-flex" >
                                         
                         <?php if ( has_post_thumbnail() ) : ?>
 
-                            <?php the_post_thumbnail('post-thumbnail', array('class' => $m_class .'__thumbnail', 'alt' => get_the_title(), 'title' => get_the_title() )); ?>
+                            <?php the_post_thumbnail('post-thumbnail', array('class' => $m_class .'__header-thumbnail', 'alt' => get_the_title(), 'title' => get_the_title() )); ?>
     
                         <?php else : ?>
 
-                            <img src="<?php echo esc_url(get_template_directory_uri() . '/public/images/image-placeholder.webp'); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" title="<?php echo esc_attr(get_the_title()) ?>" class="<?php echo esc_attr('post-card-header-image'); ?>" >
+                            <img src="<?php echo esc_url(get_template_directory_uri() . '/public/images/image-placeholder.webp'); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" title="<?php echo esc_attr(get_the_title()) ?>" class="<?php echo esc_attr( $m_class ); ?>__header-thumbnail" >
                                    
                         <?php endif; ?>
                                                           
@@ -55,340 +63,57 @@
                                     
                     <!-- body -->
             
-                    <div class="<?php echo esc_attr('post-card__body justify-content-between'); ?>" >
+                    <div class="<?php echo esc_attr( $m_class ); ?>__body d-flex" >
 
-                        <div class="post-card__body-top">
+                        <div class="<?php echo esc_attr( $m_class ); ?>__body-top d-flex">
                                     
-                            <div class="post-card__body-title" >
+                            <div class="<?php echo esc_attr( $m_class ); ?>__body-title d-flex" >
                                                        
-                                <span class="post-card__body-title-category" ><?php the_category(); ?><?php // the_time(' d F, Y '); ?></span>
+                                <a href="<?php echo esc_url ( $category_link ); ?>" class="post-category" ><?php echo esc_html( $category_name ); ?></a>
                  
-                                <h5 class="post-card__body-title-heading" ><a href="<?php echo the_permalink() ?>"  class="<?php echo esc_attr(''); ?>" ><?php the_title(); ?></a></h5>
+                                <h5 class="post-ttile" ><a href="<?php echo the_permalink() ?>"  class="<?php echo esc_attr(''); ?>" ><?php the_title(); ?></a></h5>
 
                             </div>
                                     
                             <?php if ( $show_excerpts ) { ?>
 
-                                <div class="post-card__body-text" >
-
-                                    <p><?php echo substr(get_the_excerpt(),0,150, ) ?></p>
-                                                
-                                </div>                                                       
+                                <p class="<?php echo esc_attr( $m_class ); ?>__body-text d-flex" ><?php echo wp_trim_words(get_the_excerpt(), 30, '...'); ?></p>
                                 
                             <?php } ?> 
 
-                        </div>
+                            <?php if ( $show_read ) { ?>
 
-                        <div class="post-card__body-footer bg-white">
-
-                            <?php if ( $show_more ) { ?>
-
-                                <div class="<?php echo esc_attr('post-card-2__body-extra '); ?>" >
+                                <div class="<?php echo esc_attr( $m_class ); ?>__body-extra d-flex" >
                                                 
                                     <?php
 
-                                        $text =  esc_html__( 'Read', 'law-corporate' );																		
+                                        $text =  esc_html__( 'Read Post', 'law-corporate' );																		
                                         $url = esc_url( get_the_permalink() );																		
-                                        $classes =  ['btn-slim', 'wide-button',];	
+                                        $classes =  ['btn-slim', 'btn-features', 'wide-button',];	
+                                        $type = '';
                                         $target = '_self';
                                         $rel = '';
+                                        $icon = 'fas fa-arrow-right';
             
-                                        echo lc_cta_button ($text, $url, $classes, $target, $rel);                              
+                                        echo lc_cta_button ($text, $url, $classes, $type, $target, $rel, $icon);                              
                         
                                     ?>
 
                                 </div>
                                 
-                            <?php } ?>     
+                            <?php } ?>    
+
+                        </div>
+
+                        <div class="<?php echo esc_attr( $m_class ); ?>__body-footer d-flex bg-white">
                                                                                     
-                            <div class="<?php echo esc_attr('post-card__body-footer-stamp d-flex justify-content-between'); ?>"  >
-                                                
-                                <span  class="time"  ><?php // the_category(); ?><?php the_time(' d F, Y '); ?></span>
+                            <span  class="time"  ><?php  ?><?php the_time(' d F, Y '); ?></span>
 
-                                <span  class="time"  ></span>
-
-                                <span  class="time"  ><?php echo esc_html(get_avg_read_time()); ?><span class="read-text"> Read</span></span>
-
-                            </div>
+                            <span  class="read-time"  ><?php echo esc_html__( get_avg_read_time(), 'law-corporate' ); ?><span class="read-time__note"><?php  __( 'Read' , 'law-corporate'); ?></span></span>
 
                         </div>
   
                     </div>   
-                                     
-                    <!-- body -->
-                      <!--                  
-                    <div class="<?php echo esc_attr('post-card__body'); ?>" >
-
-                        <div class="<?php echo esc_attr('post-card__body-title mb-0'); ?>" >
-
-                            <h4 class="<?php echo esc_attr('mb-2'); ?>" ><a href="<?php echo the_permalink() ?>"  class="<?php echo esc_attr(''); ?>" ><?php the_title(); ?></a></h4>
-                                        
-                            <div class="<?php echo esc_attr('post-card__body-stamp d-flex '); ?>"  >
-
-                                <?php echo esc_html('By'); ?>&nbsp;&nbsp;<?php if (function_exists('lc_post_author_data')) {lc_post_author_data();} ?>
-                                            
-                                <?php // the_category(); ?>&nbsp;&nbsp;&diams;&nbsp;&nbsp;
-
-                                <span  class="<?php echo esc_attr('post-card__body-stamp-time '); ?>"  ><?php the_time(' d F, Y '); ?>&nbsp;&nbsp;&diams;&nbsp;&nbsp;
-
-                                <?php // echo esc_html(get_avg_read_time()); ?></span>
-
-                            </div>
-                                    
-                        </div>
-                            
-                        <?php if ( $show_excerpts ) { ?>
-
-                            <div class="<?php echo esc_attr('post-card__body-text my-2 '); ?>" >
-
-                                <p><?php echo substr(get_the_excerpt(),0,30, ) ?></p>
-                                            
-                            </div>                                                       
-                            
-                        <?php } ?>     
-                                                        
-                        <div class="<?php echo esc_attr('post-card__body-stamp d-flex '); ?>"  >
-                                                
-                            <?php the_category(); ?>
-
-                            <span  class="<?php echo esc_attr('post-card__body-stamp-time '); ?>"  ><?php echo esc_html(get_avg_read_time()); ?></span>
-
-                        </div>
-
-                        <?php if ( $show_more ) { ?>
-
-                            <div class="<?php echo esc_attr('post-card__body-extra '); ?>" >
-                                            
-                                <?php
-
-                                    $text =  esc_html__( 'Read', 'law-corporate' );																		
-                                    $url = esc_url( get_the_permalink() );																		
-                                    $classes =  ['btn-slim', 'wide-button',];	
-                                    $target = '_self';
-                                    $rel = '';
-        
-                              //      echo lc_cta_button ($text, $url, $classes, $target, $rel);                              
-                    
-                                ?>
-
-                            </div>
-                            
-                        <?php } ?>   
-
-                    </div>-->   
-
-                </article>
-
-            <?php
-
-        }
-
-    }
-
-    /**     BLOG POST CARD - FEATURED    */
-    if(! function_exists('lc_post_card_featured')){
-
-        function lc_post_card_featured ( $m_class, $class = [], $show_excerpts = true, $show_more = true){
-    
-            // Safety check: Ensure $class is an array for implode to work smoothly
-            if ( ! is_array( $class ) ) {
-                $class = array();
-            }
-
-            // 1. Convert $class to an array if it's a string, then implode it.
-            $classes  = implode( ' ', (array) $class );
-
-            // 2. CONCATENATE: Combine the two class variables into one string.
-            $full_classes = trim( $m_class . ' ' . $classes );
-
-            ?>
-
-                <article class="<?php echo esc_attr( $full_classes ) ?>" > 
-
-                    <!-- thumbnail -->
-
-                    <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" class="<?php echo esc_attr('post-card__header'); ?>" >
-                                        
-                        <?php if ( has_post_thumbnail() ) : ?>
-
-                            <?php the_post_thumbnail('post-thumbnail', array('class' => $m_class .'__header-thumbnail', 'alt' => get_the_title(), 'title' => get_the_title() )); ?>
-    
-                        <?php else : ?>
-
-                            <img src="<?php echo esc_url(get_template_directory_uri() . '/public/images/image-placeholder.webp'); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" title="<?php echo esc_attr(get_the_title()) ?>" class="<?php echo esc_attr('post-card-2__header-thumbnail'); ?>" >
-                                   
-                        <?php endif; ?>
-                                                          
-                    </a>
-                                    
-                    <!-- body -->
-            
-                    <div class="<?php echo esc_attr('post-card__body justify-content-between'); ?>" >
-
-                        <div class="post-card__body-top">
-                                    
-                            <div class="post-card__body-title" >
-                                                       
-                                <span class="post-card__body-title-category" ><?php the_category(); ?><?php // the_time(' d F, Y '); ?></span>
-                 
-                                <h5 class="post-card__body-title-heading" ><a href="<?php echo the_permalink() ?>"  class="<?php echo esc_attr(''); ?>" ><?php the_title(); ?></a></h5>
-
-                            </div>
-                                    
-                            <?php if ( $show_excerpts ) { ?>
-
-                                <div class="post-card__body-text" >
-
-                                    <p><?php echo substr(get_the_excerpt(),0,165, ) ?></p>
-                                                
-                                </div>                                                       
-                                
-                            <?php } ?> 
-
-                        </div>
-
-                        <div class="post-card__body-footer bg-white">
-
-                            <?php if ( ! $show_more ) { ?>
-
-                                <div class="<?php echo esc_attr('post-card-2__body-extra '); ?>" >
-                                                
-                                    <?php
-
-                                        $text =  esc_html__( 'Read', 'law-corporate' );																		
-                                        $url = esc_url( get_the_permalink() );																		
-                                        $classes =  ['btn-slim', 'wide-button',];	
-                                        $target = '_self';
-                                        $rel = '';
-            
-                                        echo lc_cta_button ($text, $url, $classes, $target, $rel);                              
-                        
-                                    ?>
-
-                                </div>
-                                
-                            <?php } ?>     
-                                                                                    
-                            <div class="<?php echo esc_attr('post-card__body-footer-stamp d-flex justify-content-between'); ?>"  >
-                                                
-                                <span  class="time"  ><?php // the_category(); ?><?php the_time(' d F, Y '); ?></span>
-
-                                <span  class="time"  ></span>
-
-                                <span  class="time"  ><?php echo esc_html(get_avg_read_time()); ?><span class="read-text"> Read</span></span>
-
-                            </div>
-
-                        </div>
-  
-                    </div>   
- 
-                </article>
-
-            <?php
-
-        }
-
-    }
-
-    /**     BLOG POST CARD - FEATURED SMALL     */
-    if(! function_exists('lc_post_card_small')){
-
-        function lc_post_card_small ( $m_class, $class = [], $show_excerpts = true, $show_more = true){
-    
-            // Safety check: Ensure $class is an array for implode to work smoothly
-            if ( ! is_array( $class ) ) {
-                $class = array();
-            }
-
-            // 1. Convert $class to an array if it's a string, then implode it.
-            $classes  = implode( ' ', (array) $class );
-
-            // 2. CONCATENATE: Combine the two class variables into one string.
-            $full_classes = trim( $m_class . ' ' . $classes );
-
-            ?>
-
-                <article class="<?php echo esc_attr( $full_classes ) ?>" > 
-
-                    <!-- thumbnail -->
-
-                    <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" class="<?php echo esc_attr('post-card__header'); ?>" >
-                                        
-                        <?php if ( has_post_thumbnail() ) : ?>
-
-                            <?php the_post_thumbnail('post-thumbnail', array('class' => $m_class .'__header-thumbnail', 'alt' => get_the_title(), 'title' => get_the_title() )); ?>
-    
-                        <?php else : ?>
-
-                            <img src="<?php echo esc_url(get_template_directory_uri() . '/public/images/image-placeholder.webp'); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" title="<?php echo esc_attr(get_the_title()) ?>" class="<?php echo esc_attr('post-card-2__header-thumbnail'); ?>" >
-                                   
-                        <?php endif; ?>
-                                                          
-                    </a>
-                                    
-                    <!-- body -->
-            
-                    <div class="<?php echo esc_attr('post-card__body justify-content-between'); ?>" >
-
-                        <div class="post-card__body-top">
-                                    
-                            <div class="post-card__body-title" >
-                                                        
-                                <span class="post-card__body-title-category d-flex" ><?php  the_category(); ?><?php // the_time(' d F, Y '); ?></span>
-                
-                                <h5 class="post-card__body-title-heading" ><a href="<?php echo the_permalink() ?>"  class="title-link" ><?php the_title(); ?></a></h5>
-
-                            </div>
-                                    
-                            <?php if ( $show_excerpts ) { ?>
-
-                                <div class="post-card__body-text mt-2" >
-
-                                    <p><?php echo substr(get_the_excerpt(),0,165, ) ?></p>
-                                                
-                                </div>                                                       
-                                
-                            <?php } ?> 
-
-                        </div>
-
-                        <div class="post-card__body-footer d- bg-white">
-
-                            <?php if ( $show_more ) { ?>
-
-                                <div class="<?php echo esc_attr('post-card-2__body-extra '); ?>" >
-                                                
-                                    <?php
-
-                                        $text =  esc_html__( 'Read', 'law-corporate' );																		
-                                        $url = esc_url( get_the_permalink() );																		
-                                        $classes =  ['btn-slim', 'wide-button',];	
-                                        $target = '_self';
-                                        $rel = '';
-            
-                                        echo lc_cta_button ($text, $url, $classes, $target, $rel);                              
-                        
-                                    ?>
-
-                                </div>
-                                
-                            <?php } ?>     
-                                                                                    
-                            <div class="<?php echo esc_attr('post-card__body-footer-stamp d-flex justify-content-between'); ?>"  >
-                                                
-                                <span  class="time"  ><?php//  the_category(); ?><?php the_time(' d F, Y '); ?></span>
-
-                                <span  class="time"  ></span>
-
-                                <span  class="time"  ><?php echo esc_html(get_avg_read_time()); ?> <span class="read-text">Read</span></span>
-
-                            </div>
-
-                        </div>
-  
-                    </div>   
- 
 
                 </article>
 
@@ -1030,3 +755,74 @@
         }
 
     }    
+    
+    /** RELATED POSTS */
+    if(!function_exists('lc_get_related_posts')){
+        
+        function lc_get_related_posts (){
+               
+            $related_posts = lc_get_related_items_query ( 'post' );
+
+            $main_class = 'post-card';
+            $other_classes = ['small', 'col-sm-12'];
+
+            $item_flex = '';
+
+            if ( $related_posts && $related_posts -> have_posts() ) {
+                        
+                //$post_count = $related_posts->post_count;
+                $post_max = $related_posts->get('posts_per_page');
+                
+                if ( $post_max % 2 == 0  ) {
+
+                      $item_flex = esc_attr ( ' related-item-even' );
+
+                } else {
+
+                    $item_flex = esc_attr ( ' related-item-odd' );
+                
+                }
+
+            }
+            
+            echo '<section  class="related-item d-flex col-smd-12" >';
+
+                    echo  '<h4 class="related-item__header d-flex">' . esc_html__('Related Insights & Updates', "law-corporate")  .  '<span class="fas fa-magnifying-glass-chart ms-4"></span></h4>';
+
+                    echo '<hr class="horizontal-line" >';
+
+                    if ( $related_posts->have_posts() ) {
+
+                        echo '<div class="' . esc_attr('related-item__list d-flex') . '">';
+
+                            while ( $related_posts->have_posts() ){
+                                        
+                                $related_posts->the_post();
+                                        
+                                echo '<div  class="'. esc_attr( 'related-item__list-item d-flex' . $item_flex ) .'">' ;
+                                    
+                                    lc_post_card ($main_class, $other_classes, false, true );
+
+                                echo  '</div>';
+
+                            }
+
+                        echo '</div>';
+                                    
+                                  //  printf ( 'Total available: ' .$post_count);
+                                  //  printf ( ' ' );
+                                  //  printf ( 'Max listabe post: ' .$post_max);
+
+                        wp_reset_postdata();
+
+                    } else {
+
+                        echo '<p class="' . esc_attr(' ') . '" >' . esc_html__('No related insights(s) posted.', "law-corporate") . '</p>';    
+
+                    }
+
+            echo '</section>';
+
+        }
+
+    }

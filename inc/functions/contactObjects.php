@@ -309,6 +309,31 @@
 
     }
 
+    /**
+     * D Render contacts Information widget
+     */
+    if ( ! function_exists( 'lc_contact_widget' ) ) {
+
+        function lc_contact_widget() {
+
+            echo '<div class="footer-contact d-flex" >';
+
+                lc_contact_address ();
+
+                lc_contact_phone ();
+
+                lc_contact_email ();
+
+            echo '</div>';
+
+        }
+
+        // Allow both automatic and manual rendering
+        //add_action( 'wp_footer', 'lc_contact_email' );
+        //add_action( 'lc_contact_widget', 'lc_contact_widget' );
+
+    }
+
 
     /** FORM SECTION */
 

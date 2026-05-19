@@ -103,13 +103,13 @@
             array(
                     'name'  		=>__( 'Footer One', 'law-corporate' ),
                     'id'    		=>	'footer-1',
-                    'class'         =>  'footer-one footer-widget',
+                    'class'         =>  'footer-one footer-widget d-flex',
                     'description' 	=> __( ' The 1st footer item on the footer of the page ', 'law-corporate' ),
                     'before_sidebar'=> '<div id="%1$s" class="%2$s" >',
                     'after_sidebar'	=> '</div>',                    
-                    'before_widget' => '<div id="%1$s" class="widget %2$s" >',
+                    'before_widget' => '<div id="%1$s" class="widget %2$s d-flex" >',
                     'after_widget' 	=> '</div>',
-                    'before_title' 	=> '<h4 class="widget-title mb-2" >',
+                    'before_title' 	=> '<h4 class="widget-title" >',
                     'after_title' 	=> '</h4>',                    
             )
         );
@@ -119,13 +119,13 @@
         array(
                     'name' 			=> __( 'Footer Two', 'law-corporate' ),
                     'id' 			=> 'footer-2',
-                    'class'         => 'footer-two footer-widget',
+                    'class'         => 'footer-two footer-widget d-flex',
                     'description' 	=> __( 'The 2nd footer item on the footer of the page ', 'law-corporate' ),
                     'before_sidebar'=> '<div id="%1$s" class="%2$s" >',
                     'after_sidebar'	=> '</div>',
-                    'before_widget' => '<div id="%1$s" class="widget %2$s" >',
+                    'before_widget' => '<div id="%1$s" class="widget %2$s d-flex" >',
                     'after_widget' 	=> '</div>',
-                    'before_title' 	=> '<h4 class="widget-title mb-2" >',
+                    'before_title' 	=> '<h4 class="widget-title" >',
                     'after_title' 	=> '</h4>',
             ) 
         );
@@ -135,13 +135,13 @@
             array(
                     'name' 			=>__( 'Footer Three', 'law-corporate'),
                     'id' 			=> 'footer-3',
-                    'class'         => 'footer-three footer-widget',
+                    'class'         => 'footer-three footer-widget d-flex',
                     'description' 	=> __( ' The 3rd footer item on the footer of the page ', 'law-corporate' ),
                     'before_sidebar'=> '<div id="%1$s" class="%2$s" >',
                     'after_sidebar'	=> '</div>',
-                    'before_widget' => '<div id="%1$s" class="widget %2$s">',
+                    'before_widget' => '<div id="%1$s" class="widget %2$s d-flex" >',
                     'after_widget' 	=> '</div>',
-                    'before_title' 	=> '<h4 class="widget-title mb-2">',
+                    'before_title' 	=> '<h4 class="widget-title">',
                     'after_title'	=> '</h4>',
             ) 
         );
@@ -151,13 +151,13 @@
             array(
                     'name' 			=>__( 'Footer Four', 'law-corporate'),
                     'id' 			=> 'footer-4',
-                    'class'         => 'footer-four footer-widget',
+                    'class'         => 'footer-four footer-widget d-flex',
                     'description' 	=> __( ' The 4th footer item on the footer of the page ', 'law-corporate' ),
                     'before_sidebar'=> '<div id="%1$s" class="widget-item %2$s" >',
                     'after_sidebar'	=> '</div>',
-                    'before_widget' => '<div id="%1$s" class="widget %2$s">',
+                    'before_widget' => '<div id="%1$s" class="widget %2$s d-flex" >',
                     'after_widget' 	=> '</div>',
-                    'before_title' 	=> '<h4 class="widget-title mb-2">',
+                    'before_title' 	=> '<h4 class="widget-title">',
                     'after_title'	=> '</h4>',
             )
         );
@@ -167,13 +167,13 @@
             array(
                     'name' 			=>__( 'Footer Five', 'law-corporate'),
                     'id' 			=> 'footer-5',
-                    'class'         => 'footer-five footer-widget',
+                    'class'         => 'footer-five footer-widget d-flex',
                     'description' 	=> __( ' The 5th footer item on the footer of the page ', 'law-corporate' ),
                     'before_sidebar'=> '<div id="%1$s" class="widget-item %2$s" >',
                     'after_sidebar'	=> '</div>',
-                    'before_widget' => '<div id="%1$s" class="widget %2$s">',
+                    'before_widget' => '<div id="%1$s" class="widget %2$s d-flex" >',
                     'after_widget' 	=> '</div>',
-                    'before_title' 	=> '<h4 class="widget-title mb-2">',
+                    'before_title' 	=> '<h4 class="widget-title">',
                     'after_title'	=> '</h4>',
             )
         );

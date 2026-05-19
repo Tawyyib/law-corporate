@@ -6,7 +6,7 @@
      */
 
         
-    /**     PROJECT POST CARD      */
+    /**  1.  PROJECT POST CARD      */
     if(! function_exists('lc_projects_card')){
 
         function lc_projects_card(){
@@ -152,7 +152,139 @@
 
     }
 
-    /**     PROJECT SIDEBAR METADATA     */
+             
+    /**  2.  PROJECT POST CARD MINI    */
+    if(! function_exists('lc_projects_card_mini')){
+
+        function lc_projects_card_mini (){
+
+            $button_label = __( 'Read Case Study', 'law-corporate' );
+            $post_url = esc_url ( get_permalink () );
+            $button_classes = esc_attr ( 'btn-slim btn-features' );        
+            $icon_classes = esc_attr( 'fas fa-arrow-right' );        
+
+            ?>
+
+                <article class="project-card-mini" > 
+                                    
+                    <?php if ( has_post_thumbnail() ) : ?>
+
+                    <a href="<?php esc_url(get_the_permalink()); ?>" class="project-card-mini__thumbnail mb-0" title="<?php the_title_attribute(); ?>">
+                        
+                        <?php if ( has_post_thumbnail() ) : ?>
+
+                            <?php the_post_thumbnail('post-thumbnail', array('class' => 'project-card-mini__thumbnail-image', 'alt' => get_the_title(), 'title' => get_the_title() )); ?>
+    
+                        <?php else : ?>
+
+                            <img src="<?php echo esc_url(get_template_directory_uri() . '/public/images/image-placeholder.webp'); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" title="<?php echo esc_attr(get_the_title()) ?>" class="<?php echo esc_attr('project-card-mini__thumbnail-image'); ?>" >
+                                   
+                        <?php endif; ?>
+
+                    </a>
+
+                    <?php endif; ?>
+                                                        
+                    <div class="project-card-mini__body justify-content-between" >
+
+                        <h5 class="project-card-mini__body-title" ><a href="<?php echo the_permalink() ?>"  class="<?php echo esc_attr(''); ?>" ><?php the_title(); ?></a></h5>
+                               
+                        <p class="project-card-mini__body-text mb-2"><?php echo substr(get_the_excerpt(),0, 203, ) ?></p>
+                                                                                                                                
+                        <?php lc_cta_button( $button_label, $post_url, $button_classes, '', '', '', $icon_classes ) ?>
+                        
+                    </div>   
+                                                                                                                      
+                </article>
+
+            <?php
+
+        }
+        add_action('', 'lc_projects_card_mini');
+
+    }
+
+     
+    /**  3.  RELATED PROJECTS     */
+    if(!function_exists('lc_get_related_projects')){
+        
+        function lc_get_related_projects (){
+
+            $related_projects = lc_get_related_items_query ( 'projects' );
+
+            $item_flex = '';
+
+            if ( $related_projects && $related_projects->have_posts() ) {
+                        
+                //$post_count = $related_projects->post_count;
+                
+                $post_max = $related_projects->get('posts_per_page');
+                
+                if ( $post_max % 2 == 0 ) {
+
+                    $item_flex = esc_attr ( ' related-item-even' );
+
+                } else {
+                    
+                    $item_flex = esc_attr ( ' related-item-odd' );
+                
+                }
+
+            }
+
+            echo '<section class="related-item d-flex col-smd-12" >';
+
+                if ( is_tax () || is_singular ('services') ) {
+
+                    echo '<h4 class="related-item__header d-flex">' . esc_html__('Featured Case Studies', "law-corporate")  .  '<span class="fas fa-magnifying-glass-chart ms-4"></span></h4>';
+
+                } else if ( is_singular ('projects') ) {
+
+                    echo  '<h4 class="related-item__header d-flex">'. esc_html__('Similar Projects', "law-corporate")  .'<span class="fas fa-magnifying-glass-chart"></span></h4>';
+
+
+                } else {
+
+                    echo  '<h4 class="related-item__header d-flex">'. esc_html__('Related Case Studies', "law-corporate")  .'<span class="fas fa-magnifying-glass-chart"></span></h4>';
+
+                }
+
+                echo '<hr class="horizontal-line" >';
+                
+                if ( $related_projects->have_posts() ) {
+
+                    echo '<div class="related-item__list d-flex">';
+
+                        while ( $related_projects->have_posts() ){
+                                        
+                        $related_projects->the_post();
+                                        
+                        echo '<div class="'. esc_attr( 'related-item__list-item d-flex' . $item_flex ) . '">';
+
+                            lc_projects_card_mini ();
+
+                        echo '</div>';
+
+                        }
+                                
+                    echo '</div>';
+
+                        wp_reset_postdata();
+
+                    } else {
+
+                        echo '<p class="' . esc_attr('  ') . '" >' . esc_html__('No related project(s) posted.', "law-corporate") . '.</p>';
+
+                    }
+            
+            echo '</section>';
+
+        }
+
+    }
+
+
+    /**  4.  PROJECT SIDEBAR METADATA     */
     function project_aside_data_enhanced() {
 
         // Main
@@ -522,27 +654,3 @@
         
     }
     project_aside_data_enhanced();
-
-    
-    // B. Project Page Permalink
-    if(!function_exists('get_projects_permalink')){
-
-        function get_projects_permalink(){ 
-            
-            // Get the permalink for the 'about' page
-            $project_permalink = get_permalink_by_slug('projects');
-
-            if ($project_permalink) {
-
-                echo esc_url($project_permalink);
-
-            } else {
-
-                echo esc_html__('link not found.', "law-corporate");
-
-            }
-
-        }
-        add_action('', 'get_projects_permalink');
-
-    }

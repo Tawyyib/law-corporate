@@ -253,17 +253,31 @@ $wp_customize->add_setting( 'address_line_1', //
         'settings' => 'brand_image_mobile',
     )));
 
-    // D.2.a Add setting for statement of purpose 
+    // D.3.a Add setting for statement of purpose 
     $wp_customize->add_setting('statement_of_purpose', array(
         'default' => '',
         'sanitize_callback' => 'sanitize_textarea_field',
     ));
 
-    // D.2.b Add control for statement of purpose 
+    // D.3.b Add control for statement of purpose 
     $wp_customize->add_control('statement_of_purpose_control', array(
         'label' => __('Statement of Purpose', 'law-corporate'),
         'section' => 'brand_section',
         'settings' => 'statement_of_purpose',
+        'type' => 'textarea',
+    ));
+    
+    // D.4.a Add setting for brand certification 
+    $wp_customize->add_setting('certification_statement', array(
+        'default' => '',
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+
+    // D.4.b Add control for brand certification 
+    $wp_customize->add_control('certification_statement_control', array(
+        'label' => __('Certification Statement', 'law-corporate'),
+        'section' => 'brand_section',
+        'settings' => 'certification_statement',
         'type' => 'textarea',
     ));
 

@@ -10,9 +10,11 @@
         
         <footer class="<?php echo esc_attr('app-footer'); ?>" >
 
-            <?php get_template_part( 'template-parts/footer/upper-footer' ); ?>
-                        
-            <?php get_template_part( 'template-parts/footer/lower-footer' ); ?>
+            <?php 
+                get_template_part( 'template-parts/footer/footer-main' );
+                get_template_part( 'template-parts/footer/footer-bottom' );
+                lc_back_to_top();
+            ?>
 
         </footer>
 

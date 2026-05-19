@@ -20,7 +20,7 @@
                                                 
                                             </main>         
                                             
-                                            <?php lc_services_rel(); ?>
+                                            <?php get_sidebar ( 'aside' ); ?>
 
                                         </article> 
                                                                     
@@ -32,6 +32,6 @@
                             
                             } ?>
   
-                            <?php get_sidebar(); ?>
+                            <?php get_sidebar( 'below' ); ?>
                              
                         </div>

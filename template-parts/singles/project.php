@@ -11,7 +11,7 @@
                                                                                 
                                     <article class="project d-flex">
                                                  
-                                        <?php echo lc_project_metadata(); ?>
+                                        <?php get_sidebar ('aside'); ?>
 
                                         <main class="project__body" >
 
@@ -33,6 +33,6 @@
                             
                             } ?>
                                                    
-                            <?php get_sidebar(); ?>
+                            <?php get_sidebar('below'); ?>
           
                         </div>                               

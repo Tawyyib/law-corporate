@@ -20,539 +20,352 @@
 // Exit if accessed directly
 if(!defined('ABSPATH')){ exit; }
 
-/** HEADER */
-
- // Main Menu
-if(!function_exists('lc_main_menu')){
-
-        function lc_main_menu (){ 
-
-                if(has_nav_menu('primary')){
-
-                     wp_nav_menu(
-
-                         array(
-
-                                    'menu'              => 'Main Menu',
-                                    // menu container tag
-                                    'container'         => 'div',
-                                    // containver tag class
-                                    'container_class'   => ' nav-body',
-                                    // containver tag id
-                                     'container_id'      => ' menu-container ',
-                                    // do not fall back to first non-empty menu
-                                    'theme_location'    => 'primary',
-                                    //
-                                    'depth'		        => 0,
-                                    // do not fall back to wp_page_menu()
-                                    'fallback_cb'       => false,
-                                    // apply menu class
-                                    'menu_class'        => ' navbar-nav justify-content-end align-items-start align-content-center flex-grow-1 pe-3 ',
-                                    //Specifies or call the new walker nav_class
-                                    'walker'            => new walkerNavMenuPrimary()
-                            
-                        )
-                                
-                    );
-
-                }
-
-        }
-
-}
-
-// Search Form
-if(!function_exists('lc_search_form')){
-
-        function lc_search_form (){ 
-
-            $search_form = '<form role="' .   esc_attr('search')  .   '" method="'  .  esc_attr('get')  .  '" action="'  .  home_url( '/' )  .  '" class="'  .  esc_attr('searchForm d-flex')  .  '">';
-                $search_form .= '<input name="'  .  esc_attr('s')  .  '" class="'  .  esc_attr('form-control')  .  '" type="'  .  esc_attr('search')  .  '" placeholder="'  .  esc_attr('What are you looking for?')  .  '" value="'  .  esc_attr( get_search_query() )  .  '" >'; 
-                $search_form .= '<button type="'  .  esc_attr('submit')  .  '" class="'  .  esc_attr('search-btn-bg')  .  '" ><i title="'  .  esc_attr('Search')  .  '" class="'  .  esc_attr('fa-solid fa-search')  . '" role="'  .  esc_attr('image')  .  '" ></i></button>';
-            $search_form .= '</form>';
-
-            echo $search_form;
-
-        }
-        add_action('', 'lc_search_form');
-
-}
-
-    /**  BREADCRUMB OBJECTS  **/
-    $crumbObjects = get_template_directory() . '/inc/functions/crumbObjects.php';
-    require_once $crumbObjects;
-
-// Call Button
-if(!function_exists('lc_call_button')){
-
-    function lc_call_button (){ 
-            
-            // Get site's phone number
-            $phone_no = get_theme_mod('phone', 0);
-
-            if(!empty($phone_no)){
-
-                $call_button = '<a class="' .    esc_attr(' btn btn-call ') . '" ';
-                $call_button .= 'href="'    .   esc_attr(' tel:+234'. $phone_no) . '" alt="'   .   esc_attr(' tel:+234'. $phone_no)    .   '"';
-                $call_button .= 'title="'    .   esc_attr('+234'. $phone_no)   .   '"     type="' .   esc_attr(' button ')    .   '" >';
-                $call_button .= '<i class="'    .   esc_attr('fa-solid fa-phone')   .   '"></i>';
-                $call_button .= '</a>';
-
-                echo $call_button;
-
-            }
-
-        }
-        //add_action('', 'lc_call_button');
-
-}
-  
+    /** HEADER */
+    
     // A. FrontPage Banner Layout
     if(!function_exists('lc_site_banner')){
-                
+                    
         function lc_site_banner (){ 
-                                
-                // 1. Slider . $i Image Set
-                $banner_image = get_template_directory_uri() . '/public/images/items-judges.webp'; // 
-                    if (get_theme_mod('front_banner_image','law-corporate') != '') 
-                    {
-                        $banner_image = wp_get_attachment_image_src(get_theme_mod('front_banner_image','law-corporate'));
-                    }
-                    							
-					// 3. Banner Title and Texts
-					$banner_title = 'Best in Class Advisory Services'; 
-					if(get_theme_mod('front_banner_title','law-corporate') !='')
-					{
-						$banner_title = get_theme_mod('front_banner_title','law-corporate');
-					}
- 
-
-                    $banner =   '<section ';
-                    
-                    $banner .=   'class='; 
-                    if(is_front_page()){
-                        $banner .= '"'   .   esc_attr(' banner-front bg-image-center ')   .   '"';
-                    }else{
-                        $banner .=  '"'   .   esc_attr(' banner-pages bg-image-left ')    .    '"';
-                    }
-                    //$banner .=   'style=';
-                    //if (is_front_page()){
-
-                  //      $banner .=  '"'   .  'background-image:'  . url('  echo $banner_image ')  .   '"'; 
-
-                //    } elseif (is_home()){
-
-                //        $banner .=   '"'   .   'background-image:' .  url(' header_image();  ')   .   '"';
-
-                //    } else{
-                                        
-                  //      $banner .=   '"'   .   'background-image:' . url('  the_post_thumbnail_url( )  ')   .   '"'; 
-                //    }
-                    $banner .=   '>';
-                        
-                    $banner .=   '<div class="'  . esc_attr(' banner-overlay d-flex flex-column ')  .  '" >';
-                                                    
-                        $banner .=   '<div class="'  . esc_attr(' banner-overlay-inner d-inline-block container-app ') . '" >';
-                        if(is_front_page()) {
-                            
-                            $banner .=   '  <div class="'  .  esc_attr(' banner-overlay-inner-texts ')  .  '">  ' ;
-                            $banner .=   '<h1>' .    esc_html($banner_title)  .   '</h1>';
-                            $banner .=   '</div>';
-                        }else{ 
-
-                            $banner .=   '<h1>'; 
-                            if (is_home()){
-
-                                $banner .='<h1>' .  single_post_title()  .  '</h1>';  
-
-                            }elseif(is_archive()){
-
-                                $banner .=' .   esc_html(the_archive_title())   .   ';
-                                
-                            } elseif(is_category()){
-
-                                $banner .= esc_html(single_cat_title());
-                                
-                            }                             
-                            else {
-
-                                $banner .= esc_html(the_title());
-
-                            }	                                                       
-                                                       
-                            $banner .=   '</h1>';                            
-
+                                    
+                    // 1. Slider . $i Image Set
+                    $banner_image = get_template_directory_uri() . '/public/images/items-judges.webp'; // 
+                        if (get_theme_mod('front_banner_image','law-corporate') != '') 
+                        {
+                            $banner_image = wp_get_attachment_image_src(get_theme_mod('front_banner_image','law-corporate'));
                         }
-                    $banner .= '</div>';
-
-                    $banner .= '</div>';
-
-                    $banner .=   '</section>';
-
-                    echo $banner;
-            }
-
-            add_action('', 'lc_site_banner');
-
-    }
-
-    // Theme Button
-    if(!function_exists('lc_cta_button')){
-
-        function lc_cta_button ($text, $url, $class = array(), $target = '_self', $rel =''){ 
-
-            $classes      = implode( ' ', (array) $class );
-            $rel_attr     = $rel ? ' rel="' . esc_attr( $rel ) . '"' : '';
-
-            $button_cta = '<a href="'  .  esc_url( $url )  .  '" class="btn ' .  esc_attr($classes)  .  ' btn-pressed"';
-            $button_cta .= ' target="' . esc_attr( $target ) . '"' . $rel_attr . '>';
-            $button_cta .= esc_html( $text );
-             $button_cta .= '</a>';
-
-            return $button_cta;
-
-        }   
-
-    }
-
-    // Theme Button
-    if(!function_exists('lc_scroll_button')){
-
-        function lc_icon_button (
-            $text, 
-            $link_id,
-            $url = '#', 
-            $class = array(), 
-            $data_target = '', 
-            $target = '_self', 
-            $rel ='',
-            ){ 
-
-            $classes      = implode( ' ', (array) $class );
-            $rel_attr = $rel ? ' rel="' . esc_attr( $rel ) . '"' : '';
-            $id_attr = $link_id ? ' id="' . esc_attr( $link_id ) . '"' : '';
-
-
-
-            if ( $data_target ) {
-
-                // Use data-target version (drop href, target, rel)
-                $button_cta = '<a '. $id_attr . ' class="'. esc_attr( $classes ) .'" data-target="' . esc_attr( $data_target ) . '">';
-
-            } else {
-
-                // Normal link version
-                $button_cta = '<a href="' . esc_url( $url ) . '" class="btn ' . esc_attr( $classes ) . ' btn-pressed" target="' . esc_attr( $target ) . '"' . $rel_attr . '>';
-
-            }
-
-            $button_cta .= esc_html( $text ) . '</a>';
-
-            return $button_cta;
-
-        }   
-
-        function lc_scroll_button (
-            
-            $text, 
-            $link_id,
-            $icon,
-            $class = array(), 
-            $data_target = '', 
-            ){ 
-
-            $classes      = implode( ' ', (array) $class );
-            $id_attr = $link_id ? ' id="' . esc_attr( $link_id ) . '"' : '';
-
-
-
-            // Use data-target version (drop href, target, rel)
-            $button_scroll = '<a '. $id_attr . ' class="'. esc_attr( $classes ) .'" data-target="' . esc_attr( $data_target ) . '">';
-
-            $button_scroll .= esc_html( $text ) . '</a>';
-
-            $button_scroll = '<a '. $id_attr  .  '" class="' .  esc_attr($classes)  .  '"';
-            $button_scroll .= ' data-target="' . esc_attr( $data_target ) . '">';
-            $button_scroll .= esc_html( $text );
-            $button_scroll .= '<i class="fas' . esc_html('fa-chevron-circle-down') .'"></i>';
-             $button_scroll .= '</a>';
-
-            return $button_scroll;
-
-        }   
-        
-    }
-
-    //
-    function lc_customize_archive_order( $query ) {
-        if ( ! is_admin() && $query->is_main_query() ) {
-
-            // For People archive
-            if ( $query->is_post_type_archive( 'people' ) ) {
-                //$query->set( 'meta_key', 'rank' );
-                //$query->set( 'orderby', 'meta_value_num' );
-                $query->set( 'order', 'ASC' );
-            }
-
-            // For Projects archive
-            elseif ( $query->is_post_type_archive( 'projects' ) ) {
-                $query->set( 'orderby', 'date' );
-                $query->set( 'order', 'DESC' );
-            }
-
-            // For Services archive
-            elseif ( $query->is_post_type_archive( 'services' ) || $query->is_tax() ) {
-                $query->set( 'orderby', 'menu_order' );
-                $query->set( 'order', 'ASC' );
-            }
-
-            // For blog posts or categories
-            elseif ( $query->is_home() || $query->is_category() ) {
-                $query->set( 'orderby', 'date' );
-                $query->set( 'order', 'DESC' );
-            }
-        }
-    }
-    add_action( 'pre_get_posts', 'lc_customize_archive_order' );
-
-
-if(! function_exists('lc_post_navigation')){
-
-    function lc_post_navigation() {
-
-        $post_nav = '<nav class="navi d-flex justify-content-between mt-4" >';
-                                                                        
-            // Reusable helper for navigation link markup
-            $prev_link = get_previous_post_link(
-                '%link',
-                '<span class="previ-arr">&laquo;</span> 
-                <span class="previ-mobile">Previous</span> 
-                <span class="previ-desktop">%title</span>'
-            );
-
-            $next_link = get_next_post_link(
-                '%link',
-                '<span class="next-desktop">%title</span> 
-                <span class="next-mobile">Next</span> 
-                <span class="next-arr">&raquo;</span>'
-            );
-
-            if ($prev_link || $next_link) {
-
-                $post_nav .= '<div class="navi__box previ">' . $prev_link . '</div>';
-                $post_nav .= '<div class="navi__box next">' . $next_link . '</div>';
-                
-            }
-
-        $post_nav .= '</nav>';
-
-        echo $post_nav;
-
-    }
+                                                    
+                        // 3. Banner Title and Texts
+                        $banner_title = 'Best in Class Advisory Services'; 
+                        if(get_theme_mod('front_banner_title','law-corporate') !='')
+                        {
+                            $banner_title = get_theme_mod('front_banner_title','law-corporate');
+                        }
     
-}
 
+                        $banner =   '<section ';
+                        
+                        $banner .=   'class='; 
+                        if(is_front_page()){
+                            $banner .= '"'   .   esc_attr(' banner-front bg-image-center ')   .   '"';
+                        }else{
+                            $banner .=  '"'   .   esc_attr(' banner-pages bg-image-left ')    .    '"';
+                        }
+                        //$banner .=   'style=';
+                        //if (is_front_page()){
 
-    /**  PROJECT ITEM RELATED OBJECTS  **/
-    $serviceObjects = get_template_directory() . '/inc/functions/serviceObjects.php';
-    require_once $serviceObjects;
+                    //      $banner .=  '"'   .  'background-image:'  . url('  echo $banner_image ')  .   '"'; 
 
-    /**     PERSON POST CARD      */
-    if (!function_exists('lc_person_card')) {
+                    //    } elseif (is_home()){
 
-        function lc_person_card ($class) {
-                
-            $classes  = implode( ' ', (array) $class );
+                    //        $banner .=   '"'   .   'background-image:' .  url(' header_image();  ')   .   '"';
 
-            $gender = get_post_meta(get_the_ID(), 'gender', true);
-            $designation = get_post_meta(get_the_ID(), 'designation', true);
-    
-            $person_card = '<figure class="' . esc_attr( $classes ) . '">';
-    
-            $person_card .= '<a href="' . esc_url(get_permalink()) . '" ';
-            $person_card .= 'title="' . esc_attr(get_the_title()) . '" ';
-            $person_card .= 'class="' . esc_attr('person-card__thumbnail') . '">';
-    
-            if (has_post_thumbnail()) {
-
-                $person_card .= get_the_post_thumbnail(get_the_ID(), 'post-thumbnail', array('class' => 'person-card__thumbnail-image', 'alt' => get_the_title(), 'title' => get_the_title()));
-
-            } else {
-
-                $image_url = ($gender === 'Female') ? get_template_directory_uri() . '/public/images/female-avatar.webp' : get_template_directory_uri() . '/public/images/male-avatar.webp';
-                $person_card .= '<img src="' . esc_url($image_url) . '" alt="' . esc_attr(get_the_title()) . '" title="' . esc_attr(get_the_title()) . '" class="' . esc_attr('person-card__thumbnail-image') . '">';
-
-            }    
-            $person_card .= '</a>';    
-            $person_card .= '<div class="' . esc_attr('person-card__meta d-flex flex-column') . '">';
-            $person_card .= '<span class="' . esc_attr('person-card__meta-name') . '"><a href="' . esc_url(get_permalink()) . '" class="' . esc_attr('') . '">' . esc_html(get_the_title()) . '</a></span>';
-    
-            if (!empty($designation)) {
-                $person_card .= '<span class="person-card__meta-role">' . esc_html($designation) . '</span>';
-            }    
-            $person_card .= '</div>';
-    
-            $person_card .= '</figure>';
-    
-            echo $person_card;
-
-        }
-        add_action('', 'lc_person_card');
-
-    }    
-
-
-    /** Back Button */
-    if(! function_exists('lc_back_button')){
-
-        function lc_back_button(){
-
-            if ( wp_get_referer() )
-            {
-                $back_text = __( '&laquo;&nbsp;&nbsp;Go Back','law-corporate' );
-                $back_button    = "\n<button id='back-button' class='btn btn-back back-button' onclick='javascript:history.back()'>$back_text</button>";
-                echo $back_button;
-            }
-        }
-        add_action( '', 'lc_back_button' );
-
-    }
-
-    /**     Theme Pagination      */
-    if(! function_exists('lc_paginate')){
-
-        function lc_paginate(){
+                    //    } else{
+                                            
+                    //      $banner .=   '"'   .   'background-image:' . url('  the_post_thumbnail_url( )  ')   .   '"'; 
+                    //    }
+                        $banner .=   '>';
+                            
+                        $banner .=   '<div class="'  . esc_attr(' banner-overlay d-flex flex-column ')  .  '" >';
+                                                        
+                            $banner .=   '<div class="'  . esc_attr(' banner-overlay-inner d-inline-block container-app ') . '" >';
+                            if(is_front_page()) {
                                 
-            $pag = get_the_posts_pagination(); 
-            $pag = str_replace('div', 'ul', $pag);
-            $pag = str_replace('nav-links', 'pagination', $pag);
-            $pag = str_replace('<a', '<li class="page-item"><a', $pag);
-            $pag = str_replace('</a>', '</a></li>', $pag);
-            $pag = str_replace('<span', '<li class="page-item active"><a', $pag);
-            $pag = str_replace('</span>', '</a></li>', $pag);
-            $pag = str_replace('page-numbers', 'page-link', $pag);
-            $pag = str_replace('Previous', '&laquo;', $pag);
-            $pag = str_replace('Next', '&raquo;', $pag);
+                                $banner .=   '  <div class="'  .  esc_attr(' banner-overlay-inner-texts ')  .  '">  ' ;
+                                $banner .=   '<h1>' .    esc_html($banner_title)  .   '</h1>';
+                                $banner .=   '</div>';
+                            }else{ 
 
-            echo $pag;
+                                $banner .=   '<h1>'; 
+                                if (is_home()){
 
+                                    $banner .='<h1>' .  single_post_title()  .  '</h1>';  
+
+                                }elseif(is_archive()){
+
+                                    $banner .=' .   esc_html(the_archive_title())   .   ';
+                                    
+                                } elseif(is_category()){
+
+                                    $banner .= esc_html(single_cat_title());
+                                    
+                                }                             
+                                else {
+
+                                    $banner .= esc_html(the_title());
+
+                                }	                                                       
+                                                        
+                                $banner .=   '</h1>';                            
+
+                            }
+                        $banner .= '</div>';
+
+                        $banner .= '</div>';
+
+                        $banner .=   '</section>';
+
+                        echo $banner;
         }
-        add_action('', 'lc_paginate');
+        add_action('', 'lc_site_banner');
 
     }
 
-    // display social_metaboxes
-    if (!function_exists('lc_show_social_meta')) {
+    // Main Menu
+    if(!function_exists('lc_main_menu')){
 
-        function lc_show_social_meta($post_id) {
+            function lc_main_menu (){ 
 
-            $social_media = array(
-                'Facebook' => 'fab fa-facebook',
-                'Instagram' => 'fab fa-instagram',
-                'LinkedIn' => 'fab fa-linkedin',
-                'X-Twitter' => 'fab fa-x-twitter',
-                'Website' => 'fa-solid fa-globe',
-                'YouTube' => 'fab fa-youtube',
-            );
-            $output = '<ul class="social-profile bg-dar">';
-            foreach ($social_media as $platform => $icon_class) {
-    
-                $url = get_post_meta($post_id, strtolower($platform), true);
-    
-                if (!empty($url)) {
-    
-                    $output .= '<li class="social-profile-link"><a href="' . esc_url($url) . '" target="_blank" rel="noopener noreferrer"><i class="' . esc_attr($icon_class) . '"></i></a></li>';
-    
-                }
-    
-            }
-            $output .= '</ul>';
-        
-            echo $output;
-    
-        }
+                    if(has_nav_menu('primary')){
 
-    }    
+                        wp_nav_menu(
 
-    // A. About Page Permalink
-    if(!function_exists('get_about_permalink')){
+                            array(
 
-        function get_about_permalink(){ 
-            
-            // Get the permalink for the 'about' page
-            $about_permalink = get_permalink_by_slug('about');
+                                        'menu'              => 'Main Menu',
+                                        // menu container tag
+                                        'container'         => 'div',
+                                        // containver tag class
+                                        'container_class'   => 'nav-menu',
+                                        // containver tag id
+                                        'container_id'      => 'nav-menu',
+                                        // do not fall back to first non-empty menu
+                                        'theme_location'    => 'primary',
+                                        //
+                                        'depth'		        => 0,
+                                        // do not fall back to wp_page_menu()
+                                        'fallback_cb'       => false,
+                                        // apply menu class
+                                        'menu_class'        => 'navbar-nav ',
+                                        //Specifies or call the new walker nav_class
+                                        'walker'            => new walkerNavMenuPrimary()
+                                
+                            )
+                                    
+                        );
 
-            if ($about_permalink) {
-
-                echo esc_url($about_permalink);
-
-            } else {
-
-                echo esc_html__('link not found.', "law-corporate");
+                    }
 
             }
-
-        }
-        add_action('', 'get_about_permalink');
 
     }
 
+    // Search Form
+    if(!function_exists('lc_search_form')){
 
-    // C. teams Page Permalink
-    if(!function_exists('get_people_permalink')){
+            function lc_search_form (){ 
 
-        function get_people_permalink(){ 
-            
-            // Get the permalink for the 'about' page
-            $people_permalink = get_permalink_by_slug('people');
+                $search_form = '<form role="' .   esc_attr('search')  .   '" method="'  .  esc_attr('get')  .  '" action="'  .  home_url( '/' )  .  '" class="'  .  esc_attr('searchForm d-flex')  .  '">';
+                    $search_form .= '<input name="'  .  esc_attr('s')  .  '" class="'  .  esc_attr('form-control')  .  '" type="'  .  esc_attr('search')  .  '" placeholder="'  .  esc_attr('What are you looking for?')  .  '" value="'  .  esc_attr( get_search_query() )  .  '" >'; 
+                    $search_form .= '<button type="'  .  esc_attr('submit')  .  '" class="'  .  esc_attr('search-btn-bg')  .  '" ><i title="'  .  esc_attr('Search')  .  '" class="'  .  esc_attr('fa-solid fa-search')  . '" role="'  .  esc_attr('image')  .  '" ></i></button>';
+                $search_form .= '</form>';
 
-            if ($people_permalink) {
-
-                echo esc_url($people_permalink);
-
-            } else {
-
-                echo esc_html__('link not found.', "law-corporate");
+                echo $search_form;
 
             }
-
-        }
-        add_action('', 'get_people_permalink');
+            add_action('', 'lc_search_form');
 
     }
+    
+    // Post Archive Order
+    if ( ! function_exists( 'lc_customize_archive_order' )) {
+    
+        function lc_customize_archive_order( $query ) {
+            if ( ! is_admin() && $query->is_main_query() ) {
 
-    // D. About Page Permalink
-    if(!function_exists('get_page_permalink')){
-
-        function get_page_permalink(){ 
-            
-            // define an array of slugs for pages to fetch
-            $page_slugs = array(
-                'about',
-                'projects',
-                'services',
-                'teams'
-            );
-
-            // Loop through each slug and display the link
-            foreach ($page_slugs as $slug ) {
-
-                $page_permalink = get_permalink_by_slug($slug);
-                    
-                if ($page_permalink) {
-
-                    echo esc_url($page_permalink);
-
-                } else {
-
-                    echo esc_html__('link not found.', "law-corporate");
-
+                // For People archive
+                if ( $query->is_post_type_archive( 'people' ) ) {
+                    //$query->set( 'meta_key', 'rank' );
+                    //$query->set( 'orderby', 'meta_value_num' );
+                    $query->set( 'order', 'ASC' );
                 }
 
-            }
+                // For Projects archive
+                elseif ( $query->is_post_type_archive( 'projects' ) ) {
+                    $query->set( 'orderby', 'date' );
+                    $query->set( 'order', 'DESC' );
+                }
 
+                // For Services archive
+                elseif ( $query->is_post_type_archive( 'services' ) || $query->is_tax() ) {
+                    $query->set( 'orderby', 'menu_order' );
+                    $query->set( 'order', 'ASC' );
+                }
+
+                // For blog posts or categories
+                elseif ( $query->is_home() || $query->is_category() ) {
+                    $query->set( 'orderby', 'date' );
+                    $query->set( 'order', 'DESC' );
+                }
+            }
         }
-        add_action('', 'get_page_permalink');
+        add_action( 'pre_get_posts', 'lc_customize_archive_order' );
+    
+    }
+      
+    // fetch current custom taxonomy function - final functional
+    if ( ! function_exists ( 'lc_get_current_taxonomy' )) {
+            
+        /**
+         * Get current taxonomy with dynamic detection and manual fallback
+         * 
+         * @param string $manual_fallback Optional manual taxonomy name (e.g., 'competency', 'category')
+         * @return string|null Taxonomy name or null
+         */
+
+        function lc_get_current_taxonomy($manual_fallback = '') {
+            
+            $taxonomy = null;
+            $object = get_queried_object();
+            
+            // Case 1: On taxonomy archive page (category, tag, custom taxonomy)
+            if (is_tax() || is_category() || is_tag()) {
+                if (is_a($object, 'WP_Term')) {
+                    $taxonomy = $object->taxonomy;
+                }
+            }
+            
+            // Case 2: On single post/page
+            elseif (is_singular()) {
+                $post_type = get_post_type();
+                $all_taxonomies = get_object_taxonomies($post_type);
+                
+                // Exclude built-in taxonomies to get custom ones first
+                $built_in = ['category', 'post_tag', 'post_format'];
+                $custom_taxonomies = array_diff($all_taxonomies, $built_in);
+                
+                if (!empty($custom_taxonomies)) {
+                    $taxonomy = reset($custom_taxonomies);
+                } elseif (!empty($all_taxonomies)) {
+                    $taxonomy = reset($all_taxonomies);
+                }
+            }
+            
+            // Case 3: On post type archive
+            elseif (is_post_type_archive()) {
+                $post_type = get_query_var('post_type');
+                if (is_array($post_type)) {
+                    $post_type = reset($post_type);
+                }
+                
+                $all_taxonomies = get_object_taxonomies($post_type);
+                $built_in = ['category', 'post_tag', 'post_format'];
+                $custom_taxonomies = array_diff($all_taxonomies, $built_in);
+                
+                if (!empty($custom_taxonomies)) {
+                    $taxonomy = reset($custom_taxonomies);
+                } elseif (!empty($all_taxonomies)) {
+                    $taxonomy = reset($all_taxonomies);
+                }
+            }
+            
+            // Case 4: Dynamic fallback for non-post pages (front-page, custom templates, etc.)
+            if (empty($taxonomy)) {
+                
+                // Try to find any registered custom taxonomy
+                $all_registered_taxonomies = get_taxonomies(['public' => true], 'names');
+                $built_in = ['category', 'post_tag', 'post_format', 'nav_menu', 'link_category', 'wp_theme', 'wp_template_part'];
+                $available_custom = array_diff($all_registered_taxonomies, $built_in);
+                
+                if (!empty($available_custom)) {
+                    // Return the first custom taxonomy found
+                    $taxonomy = reset($available_custom);
+                } elseif (taxonomy_exists('category')) {
+                    $taxonomy = 'category';
+                }
+            }
+            
+            // Apply manual fallback if provided and no taxonomy was found
+            if (empty($taxonomy) && !empty($manual_fallback)) {
+                $taxonomy = $manual_fallback;
+            }
+            
+            // Final check: ensure taxonomy exists
+            if (!empty($taxonomy) && !taxonomy_exists($taxonomy)) {
+                $taxonomy = null;
+            }
+            
+            return $taxonomy;
+        }
+
+        /*
+            // Automatic detection (no manual fallback)
+            $tax = lc_get_current_taxonomy();
+            // Returns: detected taxonomy or first custom taxonomy found
+
+            // With manual fallback (if automatic detection fails)
+            $tax = lc_get_current_taxonomy('competency');
+            // Returns: detected taxonomy OR 'competency' if nothing found
+
+            // Force specific fallback on front page
+            $tax = lc_get_current_taxonomy('expertise');
+            // Returns: detected taxonomy OR 'expertise'
+
+            // On custom page template, force fallback
+            if (is_page_template('page-what-we-do.php')) {
+                $tax = lc_get_current_taxonomy('competency');
+            } 
+        */
+                
+    }
+
+    /**    Fetch Related Items Query     **/
+    if ( ! function_exists( 'lc_get_related_items_query' )) {
+                            
+        function lc_get_related_items_query($post_type) {
+            
+            $posts_per_page = is_tax() ? 2 : 3;
+            $taxonomy = lc_get_current_taxonomy();
+            
+            if (!$taxonomy) {
+                return null;
+            }
+            
+            $term_ids = array();
+            $exclude_ids = array();
+            
+            if (is_tax()) {
+                $term = get_queried_object();
+                $term_ids = array($term->term_id);
+                
+            } elseif (is_singular()) {
+                $terms = get_the_terms(get_the_ID(), $taxonomy);
+                
+                if (empty($terms) || is_wp_error($terms)) {
+                    return null;
+                }
+                
+                $term_ids = wp_list_pluck($terms, 'term_id');
+                $exclude_ids = array(get_the_ID());
+                
+            } else {
+                return null;
+            }
+            
+            if (empty($term_ids)) {
+                return null;
+            }
+            
+            $args = array(
+                'post_type' => $post_type,
+                'post_status' => 'publish',
+                'posts_per_page' => $posts_per_page,
+                'tax_query' => array(
+                    array(
+                        'taxonomy' => $taxonomy,
+                        'field' => 'term_id',
+                        'terms' => $term_ids,
+                    ),
+                ),
+                'orderby' => 'date',
+                'order' => 'DESC',
+            );
+            
+            if (!empty($exclude_ids)) {
+                $args['post__not_in'] = $exclude_ids;
+            }
+            
+            return new WP_Query($args);
+        }
 
     }
 
@@ -652,6 +465,95 @@ if(! function_exists('lc_post_navigation')){
         // }
 
     }
+
+    /**  BREADCRUMB OBJECTS  **/
+    $crumbObjects = get_template_directory() . '/inc/functions/crumbObjects.php';
+    require_once $crumbObjects;
+    
+    /** THEME BUTTON OBJECTS   **/
+    $buttonObjects = get_template_directory() . '/inc/functions/buttonObjects.php';
+    require_once $buttonObjects;
+
+    /**  PROJECT ITEM RELATED OBJECTS  **/
+    $serviceObjects = get_template_directory() . '/inc/functions/serviceObjects.php';
+    require_once $serviceObjects;
+
+    /**     PERSON POST CARD      */
+    if (!function_exists('lc_person_card')) {
+
+        function lc_person_card ($class) {
+                
+            $classes  = implode( ' ', (array) $class );
+
+            $gender = get_post_meta(get_the_ID(), 'gender', true);
+            $designation = get_post_meta(get_the_ID(), 'designation', true);
+    
+            $person_card = '<figure class="' . esc_attr( $classes ) . '">';
+    
+            $person_card .= '<a href="' . esc_url(get_permalink()) . '" ';
+            $person_card .= 'title="' . esc_attr(get_the_title()) . '" ';
+            $person_card .= 'class="' . esc_attr('person-card__thumbnail') . '">';
+    
+            if (has_post_thumbnail()) {
+
+                $person_card .= get_the_post_thumbnail(get_the_ID(), 'post-thumbnail', array('class' => 'person-card__thumbnail-image', 'alt' => get_the_title(), 'title' => get_the_title()));
+
+            } else {
+
+                $image_url = ($gender === 'Female') ? get_template_directory_uri() . '/public/images/female-avatar.webp' : get_template_directory_uri() . '/public/images/male-avatar.webp';
+                $person_card .= '<img src="' . esc_url($image_url) . '" alt="' . esc_attr(get_the_title()) . '" title="' . esc_attr(get_the_title()) . '" class="' . esc_attr('person-card__thumbnail-image') . '">';
+
+            }    
+            $person_card .= '</a>';    
+            $person_card .= '<div class="' . esc_attr('person-card__meta d-flex flex-column') . '">';
+            $person_card .= '<span class="' . esc_attr('person-card__meta-name') . '"><a href="' . esc_url(get_permalink()) . '" class="' . esc_attr('') . '">' . esc_html(get_the_title()) . '</a></span>';
+    
+            if (!empty($designation)) {
+                $person_card .= '<span class="person-card__meta-role">' . esc_html($designation) . '</span>';
+            }    
+            $person_card .= '</div>';
+    
+            $person_card .= '</figure>';
+    
+            echo $person_card;
+
+        }
+        add_action('', 'lc_person_card');
+
+    }    
+
+    // display social_metaboxes
+    if (!function_exists('lc_show_social_meta')) {
+
+        function lc_show_social_meta($post_id) {
+
+            $social_media = array(
+                'Facebook' => 'fab fa-facebook',
+                'Instagram' => 'fab fa-instagram',
+                'LinkedIn' => 'fab fa-linkedin',
+                'X-Twitter' => 'fab fa-x-twitter',
+                'Website' => 'fa-solid fa-globe',
+                'YouTube' => 'fab fa-youtube',
+            );
+            $output = '<ul class="social-profile bg-dar">';
+            foreach ($social_media as $platform => $icon_class) {
+    
+                $url = get_post_meta($post_id, strtolower($platform), true);
+    
+                if (!empty($url)) {
+    
+                    $output .= '<li class="social-profile-link"><a href="' . esc_url($url) . '" target="_blank" rel="noopener noreferrer"><i class="' . esc_attr($icon_class) . '"></i></a></li>';
+    
+                }
+    
+            }
+            $output .= '</ul>';
+        
+            echo $output;
+    
+        }
+
+    }    
 
     /** SIDE BAR SECTIION */
 
@@ -926,8 +828,10 @@ if(! function_exists('lc_post_navigation')){
     /**  CONTACT ITEM RELATED  OBJECTS  **/
     $contactObjects = get_template_directory() .'/inc/functions/contactObjects.php';
     require_once $contactObjects;
-   
 
+
+/** FOOTER AND UNDERFOOTER */
+         
     // F. Footer Branding    
     if(!function_exists('lc_footer_branding')){
 
@@ -939,28 +843,38 @@ if(! function_exists('lc_post_navigation')){
             
             // Get the statement of purpose
             $statement_of_purpose = get_theme_mod('statement_of_purpose', 0);
+                        
+            // Get the statement of purpose
+            $certification_statement = get_theme_mod('certification_statement', 0);
             
             // Start outputting brand information
-            $brand_label = '<div class="' . esc_attr('brand-info') . '">';
+            $brand_label = '<div class="brand-info d-flex">';
             
             // Output brand images
             if ( !empty( $brand_image_url ) ) {
-                $brand_label .= '<div class="' . esc_attr('brand-info-img') . '">';
+                $brand_label .= '<div class="brand-info__img">';
                 $brand_label .= '<img src="' . esc_url( $brand_image_url ) . '" alt="' . esc_attr('Brand Image') . '">';
                 $brand_label .= '</div>';
                 
                 // Check for mobile image only if present
                 if ( !empty( $brand_image_mobile_url ) ) {
-                    $brand_label .= '<div class="' . esc_attr('brand-info-img-mobile') . '">';
-                    $brand_label .= '<img src="' . esc_url( $brand_image_mobile_url ) . '" alt="' . esc_attr('Brand Image Mobile') . '">';
+                    $brand_label .= '<div class="brand-info__img-mobile">';
+                    $brand_label .= '<img src="' . esc_url( $brand_image_mobile_url ) . '" alt="Brand Image Mobile">';
                     $brand_label .= '</div>';
                 }
             }
             
             // Output statement of purpose
             if ( !empty( $statement_of_purpose ) ) {
-                $brand_label .= '<div class="' . esc_attr('brand-info-statement mt-3') . '">';
-                $brand_label .= '<p class="' . esc_attr('statement-of-purpose') . '">' . sprintf( esc_html__( '%s', "law-corporate" ), esc_html($statement_of_purpose) ) . '</p>';
+                $brand_label .= '<p class="brand-info__statement">';
+                $brand_label .= esc_html__( $statement_of_purpose, 'law-corporate' );
+                $brand_label .= '</p>';
+            }
+
+            if ( ! empty ( $certification_statement )) {
+                $brand_label .= '<div class="brand-info__trustBadge">';
+                    $brand_label .= '<span class="fas fa-certificate"></span>';
+                    $brand_label .= esc_html__( $certification_statement ) ;
                 $brand_label .= '</div>';
             }
             
@@ -969,6 +883,7 @@ if(! function_exists('lc_post_navigation')){
             // Echo the output
             echo $brand_label;
         }
+        
         
     }    
 
@@ -1002,7 +917,7 @@ if(! function_exists('lc_post_navigation')){
 
                             // Proper string interpolation and escaping
                             $social_items .= sprintf(
-                                '<li><a href="%s" class="%s" target="_blank" rel="noopener noreferrer" title="%s"><i class="fab fa-%s"></i></a></li>',
+                                '<li><a href="%s" class="%s" target="_blank" rel="noopener noreferrer" title="%s"><span class="fab fa-%s"></span></a></li>',
                                 esc_url($link),
                                 esc_attr($platform),
                                 esc_attr(ucfirst($platform)),
@@ -1020,10 +935,7 @@ if(! function_exists('lc_post_navigation')){
 
     }
 
-
-/** FOOTER AND UNDERFOOTER */
-      
-    // Main Menu
+    // Footer Menu
     if(!function_exists('lc_footer_menu')){
 
         function lc_footer_menu (){ 
@@ -1069,21 +981,21 @@ if(! function_exists('lc_post_navigation')){
 
                ?>
                                 
-                <div class="<?php echo esc_attr('modal fade'); ?>" id="<?php echo esc_attr('exampleModal'); ?>" tabindex="<?php echo esc_attr('-1'); ?>" aria-labelledby="<?php echo esc_attr('exampleModalLabel'); ?>" aria-hidden="<?php echo esc_attr('true'); ?>" >
+                <div class="modal fade" id="searchModal" tabindex="-1'" aria-labelledby="'searchModalLabel" aria-hidden="true'" >
                     
                     <!-- Modal -->
 
-                        <div class="<?php echo esc_attr('modal-dialog container-app'); ?> ">
+                        <div class="modal-dialog container-app">
 
-                            <div class=" <?php echo esc_attr('modal-content'); ?> ">
+                            <div class="modal-content">
 
                                 <!-- modal-close-button -->
 
-                                <div class=" <?php echo esc_attr('modal-header'); ?> ">
+                                <div class="modal-header">
 
-                                    <div class="<?php echo esc_attr('btn-wrapper'); ?> ">
+                                    <div class="btn-wrapper">
 
-                                        <button type=" <?php echo esc_attr('button'); ?> " class=" <?php echo esc_attr('btn-close'); ?> " data-bs-dismiss="modal" aria-label="<?php echo esc_attr('Close'); ?> "></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         <span><?php echo esc_html__('CLOSE', "law-corporate"); ?></span>
                                         
                                     </div>
@@ -1092,9 +1004,9 @@ if(! function_exists('lc_post_navigation')){
 
                                 <!-- modal-close-button -->
 
-                                <div class=" <?php echo esc_attr('modal-body'); ?> ">
+                                <div class="'modal-body">
 
-                                    <div class=" <?php echo esc_attr('search-box'); ?> ">
+                                    <div class="search-box">
 
                                         <?php lc_search_form(); ?>
                                                                         
@@ -1106,7 +1018,7 @@ if(! function_exists('lc_post_navigation')){
 
                         </div>
 
-                    </div>
+                </div>
 
                <?php
                             

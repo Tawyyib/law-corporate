@@ -270,3 +270,90 @@
 
     }
     add_action( 'widgets_init', 'register_ContactAaddressWidget' );
+    
+    
+    /***********************************************************
+    * 2.5. Footer Contact Widget                              *
+    ************************************************************/         
+    class FooterContactWidget extends WP_Widget{
+
+        // 1. Construct and declare Widget Function
+        function __construct(){
+
+            parent::__construct(
+                
+                // a. Base ID
+                'contact_information', 
+                
+                // b. the widget's name
+                __( 'Contact Information', 'law-corporate' ), 
+
+                // c. widget's description
+                array('description' => __('This widget display\'s the business contact information', 'law-corporate') )
+            );
+
+        }
+
+        // 2. Create Widget's Frontend Display/UI function
+        function widget($args, $instance){
+
+            // a. extract widget's argument
+            extract( $args );
+
+            // Get the title (Optional)
+            $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base);
+
+            // displays the widget opening tag
+            echo $before_widget;
+            
+            // display's widget title if set
+            if(! empty( $title )){
+
+                echo $before_title . $title . $after_title;
+
+            }
+
+            // Call the function or Output The Main Widget Instance Here
+            lc_contact_widget ();
+
+            // display widget closing tag
+            echo $after_widget;
+        }
+
+        // 3. Create Widget's Backend Forms and Input
+        function form($instance){
+
+            // instantiate widget form title
+            $instance = wp_parse_args( (array) $instance, array( 'title' => '' ) );
+            if ( isset( $instance[ 'title' ] ) ) {
+                $title = strip_tags($instance[ 'title' ]);
+                }
+                else {
+                $title = __( '', 'law-corporate' );
+                }
+
+                // widget admin form
+                ?>
+                <p>
+                <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'law-corporate' ); ?></label>
+                <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+                </p>
+                <?php
+        }
+
+        // 4. Updating Widget, replacing old instances with new
+        function update( $new_instance, $old_instance ) {
+            $instance = $old_instance;
+            $instance['title'] = sanitize_text_field( $new_instance['title'] );
+            return $instance;
+        }
+
+    }
+        
+    // Register the widget
+    function register_FooterContactWidget () {
+
+        register_widget( 'FooterContactWidget' );
+
+    }
+    add_action( 'widgets_init', 'register_FooterContactWidget' );

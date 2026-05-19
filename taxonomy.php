@@ -15,11 +15,15 @@
  * 
  */
  
-get_header(); ?>
+    get_header(); 
 
-    <?php 
-        get_template_part('template-parts/archives/tax-loop'); 
-        
-    ?>
+    get_template_part('template-parts/singles/tax-single'); 
 
-<?php get_footer(); ?>
+    //get_template_part('template-parts/archives/tax-loop'); 
+
+    get_template_part('template-parts/content/cta-banner');
+
+
+    get_footer(); 
+ 
+ ?>

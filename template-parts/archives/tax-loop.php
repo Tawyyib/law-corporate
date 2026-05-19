@@ -21,7 +21,7 @@
 
                             <!-- Display the page content -->
                             
-                            <!-- page titel -->
+                            <!-- page title -->
                             <h2 class="tax-description__title" ><?php echo esc_html( $page_data[ 'title' ] ) ?></h2>
 
                             <!-- page thumbnail or placeholder -->
