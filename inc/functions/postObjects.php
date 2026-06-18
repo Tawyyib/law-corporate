@@ -290,7 +290,7 @@
 
                     $authors = get_post_meta($post_id, '_selected_authors', true);
 
-                    $competency = wp_get_post_terms( get_the_ID(), 'competency', array("fields" => "names"));
+                    $tax_term = wp_get_post_terms( get_the_ID(), 'competency', array("fields" => "names"));
 
                     ?>
 
@@ -304,8 +304,12 @@
                         </div>  
 
                         <div class="insight-aside__item">
-                            <span class="insight-aside__item-title"><?php echo esc_html('Related Expertise Area'); ?></span>
-                            <span class="<?php echo esc_attr('insight-aside__item-value'); ?>"><?php echo esc_html(implode(', ', $competency)); ?></span>
+                            <span class="insight-aside__item-title"><?php echo esc_html__('Technical Area', 'law-corporate'); ?></span>
+                            <span class="insight-aside__item-value">
+                                <?php if ( $tax_term && ! is_wp_error( $tax_term ) ) {
+                                    echo esc_html(implode(', ', $tax_term)); 
+                                } ?>
+                            </span>
                         </div>  
 
                     <?php

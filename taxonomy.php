@@ -19,8 +19,6 @@
 
     get_template_part('template-parts/singles/tax-single'); 
 
-    //get_template_part('template-parts/archives/tax-loop'); 
-
     get_template_part('template-parts/content/cta-banner');
 
 

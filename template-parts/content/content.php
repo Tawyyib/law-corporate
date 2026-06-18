@@ -10,7 +10,7 @@
                                                                             
                                 <article class="<?php echo esc_attr(' main-post col-sm-12 col-lmd-8 '); ?>" >
                                     
-                                    <div class="<?php echo esc_attr(' '); ?>" >
+                                    <div class="container-app" >
 
                                         <?php the_content(); ?>
                                         
@@ -18,7 +18,7 @@
 
                                 </article> 
 
-                                <?php get_sidebar(); ?>
+                                <?php get_sidebar('aside'); ?>
                                         
                             <?php } 
                             

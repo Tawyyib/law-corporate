@@ -10,7 +10,7 @@
 							
 						$default_details = 'Some representative placeholder content for the slide. Some more representative placeholder content for the slide';
 						$banner_details = get_theme_mod ( 'front_banner_details' );
-						$banner_details = ! empty ( get_theme_mod ( $banner_details) )  ? esc_html ( $banner_details ) : esc_html__( $default_details, 'law-corporate' );
+						$banner_details = ! empty ( $banner_details )  ? esc_html ( $banner_details ) : esc_html__( $default_details, 'law-corporate' );
 
 						// 2. Slide Buttons
 						$url_1_default = get_permalink(get_page_by_path('projects'));
